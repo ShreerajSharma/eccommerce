@@ -117,38 +117,6 @@ export const Navbar = ({
             <span className="truncate text-[11px] sm:text-xs">{settings.announcementText || "✨ Festive Mega Sale: Up to 50% OFF | Free Shipping Across India ✨"}</span>
             <Sparkles size={12} className="text-amber-700 shrink-0 animate-pulse hidden xs:inline" />
           </div>
-
-          {/* Admin Indicator / Quick Link */}
-          <div className="hidden sm:flex items-center gap-2 shrink-0">
-            {isAdminLoggedIn ? (
-              <div className="flex items-center gap-2">
-                <span className="bg-emerald-100 text-emerald-800 border border-emerald-300 text-[10px] px-2 py-0.5 rounded-full flex items-center gap-1 font-bold">
-                  <CheckCircle2 size={10} /> Admin Active
-                </span>
-                <button 
-                  onClick={onOpenAdmin}
-                  className="text-amber-900 hover:text-stone-950 underline text-xs font-bold cursor-pointer"
-                >
-                  Dashboard
-                </button>
-                <button 
-                  onClick={onLogoutAdmin}
-                  className="text-rose-700 hover:text-rose-900 text-xs ml-1 font-semibold cursor-pointer"
-                >
-                  Logout
-                </button>
-              </div>
-            ) : (
-              <button 
-                onClick={onOpenAdmin} 
-                className="flex items-center gap-1 text-amber-900 hover:text-stone-950 transition-colors text-xs font-bold cursor-pointer px-2 py-0.5 rounded-lg hover:bg-amber-100/60"
-                title="Admin Portal Login"
-              >
-                <Lock size={11} />
-                <span>Admin Login</span>
-              </button>
-            )}
-          </div>
         </div>
       </div>
 
@@ -337,15 +305,6 @@ export const Navbar = ({
               )}
             </a>
 
-            {/* Admin Login Button (Mobile/Tablet quick icon) */}
-            <button
-              onClick={onOpenAdmin}
-              className="sm:hidden p-1.5 text-stone-700 hover:text-amber-900 rounded-full hover:bg-stone-100 cursor-pointer"
-              title="Admin Panel"
-            >
-              <Lock size={17} />
-            </button>
-
             {/* Cart Button */}
             <motion.button
               whileHover={{ scale: 1.05 }}
@@ -424,12 +383,12 @@ export const Navbar = ({
       {isMobileMenuOpen && (
         <div className="md:hidden bg-[#fdfcf9] border-t border-[#ebdcc7] shadow-xl p-4 space-y-4 animate-fadeIn">
           {/* Quick Support Link on Mobile Drawer */}
-          <div className="flex items-center gap-2 pb-3 border-b border-stone-200">
+          <div className="pb-3 border-b border-stone-200">
             <a
               href={getDirectChannelLink(settings, "Hello! I would like to inquire about your Kurtis collection")}
               target="_blank"
               rel="noopener noreferrer"
-              className={`flex-1 py-2.5 px-3.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-sm ${
+              className={`w-full py-2.5 px-3.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-sm ${
                 settings.orderChannel === 'telegram'
                   ? 'bg-sky-500 text-white hover:bg-sky-600'
                   : 'bg-emerald-600 text-white hover:bg-emerald-700'
@@ -440,17 +399,6 @@ export const Navbar = ({
                 Chat on {settings.orderChannel === 'telegram' ? 'Telegram' : 'WhatsApp'}
               </span>
             </a>
-
-            <button
-              onClick={() => {
-                setIsMobileMenuOpen(false);
-                onOpenAdmin();
-              }}
-              className="px-3.5 py-2.5 bg-stone-100 hover:bg-stone-200 text-stone-800 rounded-xl text-xs font-bold flex items-center gap-1.5 border border-stone-300"
-            >
-              <Lock size={14} />
-              <span>Admin</span>
-            </button>
           </div>
 
           <div className="space-y-1">

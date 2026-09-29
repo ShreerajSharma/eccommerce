@@ -137,16 +137,6 @@ export const Footer = ({ onOpenAdmin, settings = {}, onSelectCategory, categorie
                 <span>Boutique: Jaipur • Mumbai • Delhi</span>
               </p>
             </div>
-
-            <div className="pt-3 border-t border-[#ebdcc7]">
-              <button
-                onClick={onOpenAdmin}
-                className="inline-flex items-center gap-1.5 text-xs text-amber-900 hover:text-stone-950 font-extrabold px-3.5 py-1.5 rounded-xl bg-white border border-amber-300 shadow-xs hover:bg-stone-50 transition-all cursor-pointer"
-              >
-                <Lock size={12} />
-                <span>Store Owner / Admin Portal (PAWAN420)</span>
-              </button>
-            </div>
           </div>
 
         </div>
