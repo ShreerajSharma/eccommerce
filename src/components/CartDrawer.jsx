@@ -120,8 +120,8 @@ export const CartDrawer = ({
     <div className="fixed inset-0 z-50 overflow-hidden bg-stone-950/70 backdrop-blur-sm animate-fade-in">
       <div className="absolute inset-0" onClick={onClose}></div>
 
-      <div className="fixed inset-y-0 right-0 max-w-full flex pl-6 sm:pl-10">
-        <div className="w-screen max-w-md bg-[#fdfcf9] shadow-2xl border-l border-gold-400 flex flex-col justify-between">
+      <div className="fixed inset-y-0 right-0 max-w-full flex pl-0 sm:pl-10">
+        <div className="w-full sm:w-screen max-w-md bg-[#fdfcf9] shadow-2xl border-l border-gold-400 flex flex-col justify-between overflow-hidden">
           
           {/* 1. DRAWER HEADER */}
           <div className="p-4 sm:p-5 royal-maroon-bg text-gold-100 flex items-center justify-between border-b border-gold-500/40">
@@ -374,9 +374,9 @@ export const CartDrawer = ({
                   </span>
                 </div>
 
-                <div className="flex justify-between items-baseline pt-2 border-t border-stone-200 text-sm sm:text-base font-extrabold text-stone-950">
+                <div className="flex justify-between items-center pt-2.5 border-t border-stone-200 text-sm sm:text-base font-extrabold text-stone-950">
                   <span>Grand Total (GST Incl.)</span>
-                  <span className="font-heading text-lg sm:text-xl text-brand-950">
+                  <span className="font-heading text-lg sm:text-xl text-brand-950 font-black tracking-tight whitespace-nowrap shrink-0 pl-2">
                     ₹{grandTotal.toLocaleString('en-IN')}
                   </span>
                 </div>

@@ -478,26 +478,28 @@ export function App() {
       </main>
 
       {/* Floating WhatsApp / Telegram Quick Action Button */}
-      <a
-        href={getDirectChannelLink(settings, "Hello Aura Ethnic! I would like to inquire about your Women Fashion Collection")}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={`fixed bottom-6 right-6 z-40 text-white p-3.5 sm:px-5 sm:py-3.5 rounded-full shadow-2xl flex items-center gap-2 hover:scale-105 active:scale-95 transition-all duration-300 border-2 border-white group cursor-pointer ${
-          settings.orderChannel === 'telegram'
-            ? 'bg-sky-500 hover:bg-sky-600'
-            : 'bg-emerald-600 hover:bg-emerald-700'
-        }`}
-        title={`Chat Directly on ${settings.orderChannel === 'telegram' ? 'Telegram' : 'WhatsApp'}`}
-      >
-        {settings.orderChannel === 'telegram' ? (
-          <Send size={22} className="group-hover:translate-x-0.5 transition-transform" />
-        ) : (
-          <MessageCircle size={24} className="group-hover:animate-bounce" />
-        )}
-        <span className="hidden sm:inline font-bold text-xs tracking-wide">
-          {settings.orderChannel === 'telegram' ? 'Telegram Order' : 'WhatsApp Order'}
-        </span>
-      </a>
+      {!isCartOpen && !isCheckoutOpen && !quickViewProduct && (
+        <a
+          href={getDirectChannelLink(settings, "Hello Aura Ethnic! I would like to inquire about your Women Fashion Collection")}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={`fixed bottom-6 right-6 z-40 text-white p-3.5 sm:px-5 sm:py-3.5 rounded-full shadow-2xl flex items-center gap-2 hover:scale-105 active:scale-95 transition-all duration-300 border-2 border-white group cursor-pointer ${
+            settings.orderChannel === 'telegram'
+              ? 'bg-sky-500 hover:bg-sky-600'
+              : 'bg-emerald-600 hover:bg-emerald-700'
+          }`}
+          title={`Chat Directly on ${settings.orderChannel === 'telegram' ? 'Telegram' : 'WhatsApp'}`}
+        >
+          {settings.orderChannel === 'telegram' ? (
+            <Send size={22} className="group-hover:translate-x-0.5 transition-transform" />
+          ) : (
+            <MessageCircle size={24} className="group-hover:animate-bounce" />
+          )}
+          <span className="hidden sm:inline font-bold text-xs tracking-wide">
+            {settings.orderChannel === 'telegram' ? 'Telegram Order' : 'WhatsApp Order'}
+          </span>
+        </a>
+      )}
 
       {/* Quick View Product Modal */}
       {quickViewProduct && (

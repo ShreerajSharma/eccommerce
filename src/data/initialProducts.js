@@ -1,14 +1,14 @@
 export const DEFAULT_CATEGORIES = [
-  { id: "cat-1", name: "Kurtis & Suits", icon: "✨", image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=400&q=80", description: "Designer Anarkalis, Chikankari & Daily Kurtas" },
-  { id: "cat-2", name: "Sarees", icon: "🥻", image: "https://images.unsplash.com/photo-1610030469668-93510cb2866c?auto=format&fit=crop&w=400&q=80", description: "Banarasi, Kanjivaram, Georgette & Organza Sarees" },
-  { id: "cat-3", name: "Lehenga Choli", icon: "👑", image: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=400&q=80", description: "Bridal, Partywear & Festive Designer Lehengas" },
-  { id: "cat-4", name: "Western Dresses", icon: "👗", image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=400&q=80", description: "Maxi Dresses, Midi Gowns & Floral Party Dresses" },
-  { id: "cat-5", name: "Co-ord & Indo-Western", icon: "💃", image: "https://images.unsplash.com/photo-1596783049554-380c8f615f10?auto=format&fit=crop&w=400&q=80", description: "Trendy Crop Tops, Peplum Sets & Fusion Wear" },
-  { id: "cat-6", name: "Tops & Tunics", icon: "👚", image: "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=400&q=80", description: "Casual Tops, Embroidered Shirts & Tunics" },
-  { id: "cat-7", name: "Bottom Wear & Palazzos", icon: "👖", image: "https://images.unsplash.com/photo-1609357605129-26f69add5d6e?auto=format&fit=crop&w=400&q=80", description: "Shararas, Silk Pants, Flared Palazzos & Skirts" },
-  { id: "cat-8", name: "Dupattas & Stoles", icon: "🧣", image: "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&w=400&q=80", description: "Phulkari, Banarasi Brocade & Organza Dupattas" },
-  { id: "cat-9", name: "Ethnic Jewellery", icon: "💎", image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=400&q=80", description: "Kundan Jhumkas, Choker Sets & Bangles" },
-  { id: "cat-10", name: "Footwear & Juttis", icon: "👠", image: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=400&q=80", description: "Hand-Embroidered Punjabi Juttis & Heels" }
+  { id: "cat-1", name: "Kurtis & Suits", icon: "✨", image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=600&q=80", description: "Designer Anarkalis, Chikankari & Daily Kurtas" },
+  { id: "cat-2", name: "Sarees", icon: "🥻", image: "https://images.unsplash.com/photo-1610030469668-93510cb2866c?auto=format&fit=crop&w=600&q=80", description: "Banarasi, Kanjivaram, Georgette & Organza Sarees" },
+  { id: "cat-3", name: "Lehenga Choli", icon: "👑", image: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=600&q=80", description: "Bridal, Partywear & Festive Designer Lehengas" },
+  { id: "cat-4", name: "Western Dresses", icon: "👗", image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=600&q=80", description: "Maxi Dresses, Midi Gowns & Floral Party Dresses" },
+  { id: "cat-5", name: "Co-ord & Indo-Western", icon: "💃", image: "https://images.unsplash.com/photo-1596783049554-380c8f615f10?auto=format&fit=crop&w=600&q=80", description: "Trendy Crop Tops, Peplum Sets & Fusion Wear" },
+  { id: "cat-6", name: "Tops & Tunics", icon: "👚", image: "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=600&q=80", description: "Casual Tops, Embroidered Shirts & Tunics" },
+  { id: "cat-7", name: "Bottom Wear & Palazzos", icon: "👖", image: "https://images.unsplash.com/photo-1609357605129-26f69add5d6e?auto=format&fit=crop&w=600&q=80", description: "Shararas, Silk Pants, Flared Palazzos & Skirts" },
+  { id: "cat-8", name: "Dupattas & Stoles", icon: "🧣", image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=600&q=80", description: "Phulkari, Banarasi Brocade & Organza Dupattas" },
+  { id: "cat-9", name: "Ethnic Jewellery", icon: "💎", image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=600&q=80", description: "Kundan Jhumkas, Choker Sets & Bangles" },
+  { id: "cat-10", name: "Footwear & Juttis", icon: "👠", image: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80", description: "Hand-Embroidered Punjabi Juttis & Heels" }
 ];
 
 export const INITIAL_PRODUCTS = [
@@ -76,7 +76,7 @@ export const INITIAL_PRODUCTS = [
     category: "Sarees",
     price: 1499,
     originalPrice: 2899,
-    image: "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=800&q=80",
     sizes: ["Free Size"],
     fabric: "Premium Sheer Organza with Scallop Lace",
     color: "Blush Peach & Rose",
@@ -171,7 +171,7 @@ export const INITIAL_PRODUCTS = [
     category: "Bottom Wear & Palazzos",
     price: 599,
     originalPrice: 1199,
-    image: "https://images.unsplash.com/photo-1583391733975-009776d63435?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1609357605129-26f69add5d6e?auto=format&fit=crop&w=800&q=80",
     sizes: ["Free Size (Elastic Waist 28-42)"],
     fabric: "14KG Premium Heavy Rayon",
     color: "Off-White & Gold",
@@ -190,7 +190,7 @@ export const INITIAL_PRODUCTS = [
     category: "Dupattas & Stoles",
     price: 899,
     originalPrice: 1799,
-    image: "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=800&q=80",
     sizes: ["2.25 Meters Length"],
     fabric: "Chiffon with Silk Pat Thread Work",
     color: "Multi-color Rainbow with Gold Border",
