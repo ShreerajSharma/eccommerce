@@ -37,17 +37,16 @@ export const buildOrderMessage = ({ customer, cartItems, totalPrice, settings, d
 • Delivery Address: ${customer.address || 'Not provided'}
 • City/State: ${customer.city || ''} ${customer.state || ''}
 • Pincode: ${customer.pincode || 'Not provided'}
-• Payment Mode: ${customer.paymentMethod || 'Cash On Delivery (COD)'}
-${customer.notes ? `• Special Notes: ${customer.notes}\n` : ''}━━━━━━━━━━━━━━━━━━━━
+${customer.paymentMethod ? `• Payment Mode: ${customer.paymentMethod}\n` : ''}${customer.notes ? `• Special Notes: ${customer.notes}\n` : ''}━━━━━━━━━━━━━━━━━━━━
 🛍️ *ITEMS IN CART (${cartItems.reduce((a, c) => a + c.quantity, 0)} Items)*
 
 ${itemsListText}
 
 ━━━━━━━━━━━━━━━━━━━━
 💵 *BILL BREAKDOWN*
-• Subtotal: ₹${(totalPrice + discount).toLocaleString('en-IN')}
-${discount > 0 ? `• Discount Applied: -₹${discount.toLocaleString('en-IN')}\n` : ''}• Delivery: FREE (Express Courier)
-⭐ *GRAND TOTAL:* *₹${totalPrice.toLocaleString('en-IN')}*
+• Item Subtotal: ₹${(totalPrice + discount).toLocaleString('en-IN')}
+${discount > 0 ? `• Discount Applied: -₹${discount.toLocaleString('en-IN')}\n` : ''}• Delivery Charges: Confirmed on WhatsApp (as per location)
+⭐ *ITEM TOTAL:* *₹${totalPrice.toLocaleString('en-IN')}*
 ━━━━━━━━━━━━━━━━━━━━
 💬 *Please confirm item availability, dispatch schedule & share tracking details! Thank you!* 🙏🌸`;
 };

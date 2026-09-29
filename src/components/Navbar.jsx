@@ -114,9 +114,9 @@ export const Navbar = ({
 
           {/* Announcement Marquee / Center Text */}
           <div className="flex-1 text-center font-bold tracking-wide flex items-center justify-center gap-1.5 text-amber-950 min-w-0">
-            <Sparkles size={12} className="text-amber-700 shrink-0 animate-pulse hidden xs:inline" />
-            <span className="truncate text-[11px] sm:text-xs">{settings.announcementText || "✨ Festive Mega Sale: Up to 50% OFF | Free Shipping Across India ✨"}</span>
-            <Sparkles size={12} className="text-amber-700 shrink-0 animate-pulse hidden xs:inline" />
+            <Sparkles size={12} className="text-[#700b1d] shrink-0 animate-pulse hidden xs:inline" />
+            <span className="truncate text-[11px] sm:text-xs">{settings.announcementText || "✨ Festive Mega Sale: Up to 50% OFF | Pan-India Express Dispatch ✨"}</span>
+            <Sparkles size={12} className="text-[#700b1d] shrink-0 animate-pulse hidden xs:inline" />
           </div>
         </div>
       </div>

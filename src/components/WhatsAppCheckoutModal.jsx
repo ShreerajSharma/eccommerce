@@ -6,7 +6,6 @@ import {
   MapPin, 
   User, 
   Phone, 
-  CreditCard, 
   Sparkles, 
   ArrowRight,
   ShieldCheck,
@@ -350,59 +349,8 @@ export const WhatsAppCheckoutModal = ({
               </div>
             </div>
 
-            {/* Payment Method Selector */}
-            <div className="pt-2 border-t border-stone-200">
-              <p className="text-xs font-bold uppercase tracking-wider text-gold-800 flex items-center gap-1.5 mb-2">
-                <CreditCard size={14} />
-                <span>2. Preferred Payment Mode</span>
-              </p>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {[
-                  { id: 'Cash On Delivery (COD)', label: 'Cash on Delivery (COD)', desc: 'Pay when delivered at doorstep' },
-                  { id: 'UPI / QR Code on Delivery', label: 'UPI / Online Transfer', desc: 'GooglePay / PhonePe / Paytm' }
-                ].map((pm) => (
-                  <label
-                    key={pm.id}
-                    className={`flex items-start gap-2.5 p-2.5 rounded-xl border cursor-pointer transition-all ${
-                      customer.paymentMethod === pm.id
-                        ? 'bg-gold-50/80 border-brand-800 shadow-sm'
-                        : 'bg-white border-stone-200 hover:border-stone-400'
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value={pm.id}
-                      checked={customer.paymentMethod === pm.id}
-                      onChange={(e) => setCustomer({ ...customer, paymentMethod: e.target.value })}
-                      className="mt-0.5 text-brand-900 focus:ring-brand-800"
-                    />
-                    <div>
-                      <p className="text-xs font-bold text-stone-900">{pm.label}</p>
-                      <p className="text-[10px] text-stone-500">{pm.desc}</p>
-                    </div>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            {/* Special Instructions */}
-            <div>
-              <label className="block text-xs font-semibold text-stone-700 mb-1">
-                Special Request / Delivery Instructions (Optional)
-              </label>
-              <input
-                type="text"
-                placeholder="e.g. Gift wrapping requested, deliver before Friday"
-                value={customer.notes}
-                onChange={(e) => setCustomer({ ...customer, notes: e.target.value })}
-                className="w-full px-3 py-2 bg-white border border-stone-300 rounded-xl text-xs focus:outline-none focus:border-brand-700"
-              />
-            </div>
-
             {/* Direct Channel Submit Button */}
-            <div className="pt-3">
+            <div className="pt-2">
               <button
                 type="submit"
                 disabled={isSubmitting}

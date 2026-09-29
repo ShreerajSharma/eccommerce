@@ -297,8 +297,8 @@ export const ProductQuickView = ({ product, onClose, onAddToCart, settings = {} 
                   <span>100% Original</span>
                 </div>
                 <div className="flex items-center justify-center gap-1">
-                  <Truck size={13} className="text-amber-700" />
-                  <span>Free Shipping</span>
+                  <Truck size={13} className="text-[#700b1d]" />
+                  <span>Fast Dispatch</span>
                 </div>
                 <div className="flex items-center justify-center gap-1">
                   <RefreshCw size={13} className="text-emerald-700" />

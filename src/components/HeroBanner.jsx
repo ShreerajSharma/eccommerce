@@ -95,7 +95,7 @@ export const HeroBanner = ({ onExploreClick, settings }) => {
 
             {/* Tagline */}
             <div className="pt-2 text-xs text-[#700b1d] font-bold tracking-wide">
-              ⚡ Instant {channelLabel} Confirmation • Pan-India Free Delivery • 7-Day Easy Exchange
+              ⚡ Instant {channelLabel} Confirmation • Fast Pan-India Dispatch • 7-Day Easy Exchange
             </div>
           </motion.div>
 

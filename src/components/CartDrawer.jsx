@@ -21,8 +21,6 @@ import {
 import confetti from 'canvas-confetti';
 import { normalizeImageUrl } from '../utils/imageUrl';
 
-const FREE_SHIPPING_THRESHOLD = 1499;
-
 export const CartDrawer = ({ 
   isOpen, 
   onClose, 
@@ -63,12 +61,8 @@ export const CartDrawer = ({
   }
 
   const giftWrapFee = isGiftWrap ? 49 : 0;
-  const shippingFee = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 99;
-  const grandTotal = Math.max(0, subtotal - discountAmount + giftWrapFee + (subtotal === 0 ? 0 : shippingFee));
-
-  // Progress to free shipping
-  const progressPercent = Math.min(100, Math.round((subtotal / FREE_SHIPPING_THRESHOLD) * 100));
-  const amountNeededForFreeShip = Math.max(0, FREE_SHIPPING_THRESHOLD - subtotal);
+  const shippingFee = 0; // Confirmed on WhatsApp
+  const grandTotal = Math.max(0, subtotal - discountAmount + giftWrapFee);
 
   const triggerConfetti = () => {
     try {
@@ -151,25 +145,16 @@ export const CartDrawer = ({
             </button>
           </div>
 
-          {/* 2. FREE DELIVERY PROGRESS BAR (Zara / H&M feature) */}
-          <div className="bg-amber-50/90 px-4 py-3 border-b border-amber-200 text-xs">
-            <div className="flex items-center justify-between font-bold text-amber-950 mb-1.5">
-              <span className="flex items-center gap-1.5">
-                <Truck size={14} className="text-amber-800" />
-                {subtotal >= FREE_SHIPPING_THRESHOLD ? (
-                  <span className="text-emerald-800">🎉 Congratulations! FREE Express Delivery Unlocked!</span>
-                ) : (
-                  <span>Add <strong>₹{amountNeededForFreeShip}</strong> more for <strong>FREE Express Delivery</strong></span>
-                )}
+          {/* 2. LUXURY ASSURANCE STRIP */}
+          <div className="bg-amber-50/90 px-4 py-2.5 border-b border-amber-200/80 text-xs">
+            <div className="flex items-center justify-between font-bold text-amber-950">
+              <span className="flex items-center gap-1.5 text-[11px] sm:text-xs">
+                <Truck size={14} className="text-[#700b1d]" />
+                <span>⚡ Fast Pan-India Dispatch & Quality Guarantee</span>
               </span>
-              <span className="text-stone-500 font-mono text-[11px]">{progressPercent}%</span>
-            </div>
-
-            <div className="w-full h-2 bg-stone-200 rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-gradient-to-r from-amber-500 via-gold-500 to-emerald-600 rounded-full transition-all duration-500"
-                style={{ width: `${progressPercent}%` }}
-              ></div>
+              <span className="text-[10px] bg-amber-200/60 text-amber-900 px-2 py-0.5 rounded-full font-bold">
+                7-Day Exchange
+              </span>
             </div>
           </div>
 
@@ -379,15 +364,18 @@ export const CartDrawer = ({
                   </div>
                 )}
 
-                <div className="flex justify-between">
-                  <span>Estimated Delivery</span>
-                  <span className={shippingFee === 0 ? "text-emerald-700 font-bold" : "text-stone-900 font-semibold"}>
-                    {shippingFee === 0 ? "FREE (Express Delivery)" : `₹${shippingFee}`}
+                <div className="flex justify-between items-center text-xs">
+                  <span className="text-stone-600">Estimated Delivery</span>
+                  <span className="text-[#700b1d] font-bold bg-rose-50 px-2 py-0.5 rounded-md text-[11px] border border-rose-200">
+                    Calculated on WhatsApp
                   </span>
                 </div>
 
                 <div className="flex justify-between items-center pt-2.5 border-t border-stone-200 text-sm sm:text-base font-extrabold text-stone-950">
-                  <span>Grand Total (GST Incl.)</span>
+                  <div>
+                    <span>Grand Total (GST Incl.)</span>
+                    <p className="text-[10px] text-stone-500 font-normal mt-0.5">*Delivery charge confirmed on WhatsApp</p>
+                  </div>
                   <span className="font-heading text-lg sm:text-xl text-brand-950 font-black tracking-tight whitespace-nowrap shrink-0 pl-2">
                     ₹{grandTotal.toLocaleString('en-IN')}
                   </span>

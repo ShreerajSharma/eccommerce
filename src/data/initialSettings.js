@@ -10,7 +10,7 @@ export const INITIAL_SETTINGS = {
   telegramUsername: "radhikakurticollection", // Owner's Telegram Handle/Username (editable via Admin)
   orderChannel: "whatsapp", // 'whatsapp' | 'telegram' | 'both'
   currency: "₹",
-  announcementText: "✨ FESTIVE SALE: Extra 10% OFF on Prepaid Orders | Free Shipping Across India ✨",
+  announcementText: "✨ FESTIVE SALE: Extra 10% OFF on Prepaid Orders | Pan-India Express Dispatch ✨",
   supportEmail: "info@radhikakurticollection.com",
   adminUser: "PAWAN420",
   adminPass: "TERABAAP420",
