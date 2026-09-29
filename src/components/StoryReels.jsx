@@ -54,10 +54,10 @@ const STORY_ITEMS = [
 
 export const StoryReels = ({ onSelectCategory }) => {
   return (
-    <div className="py-4 bg-[#fcfaf7] border-b border-[#ebdcc7]/50">
-      <div className="container mx-auto px-4">
+    <div className="py-3 sm:py-4 bg-[#fcfaf7] border-b border-[#ebdcc7]/50">
+      <div className="container mx-auto px-3 sm:px-4">
         
-        <div className="flex items-center gap-4 sm:gap-6 overflow-x-auto pb-2 scrollbar-none justify-start md:justify-center">
+        <div className="flex items-center gap-3 sm:gap-6 overflow-x-auto pb-1.5 px-1 scrollbar-none justify-start md:justify-center">
           {STORY_ITEMS.map((story) => (
             <button
               key={story.id}
@@ -65,11 +65,11 @@ export const StoryReels = ({ onSelectCategory }) => {
               className="flex flex-col items-center gap-1.5 group shrink-0 transition-transform active:scale-95 cursor-pointer"
             >
               {/* Animated Gradient Ring */}
-              <div className="relative p-[2.5px] rounded-full bg-gradient-to-tr from-amber-600 via-gold-400 to-brand-900 group-hover:scale-105 transition-transform duration-300 shadow-sm">
+              <div className="relative p-[2px] sm:p-[2.5px] rounded-full bg-gradient-to-tr from-amber-600 via-gold-400 to-brand-900 group-hover:scale-105 transition-transform duration-300 shadow-sm">
                 
                 {/* Inner white border gap */}
                 <div className="p-0.5 rounded-full bg-white">
-                  <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-full overflow-hidden relative">
+                  <div className="w-14 h-14 sm:w-18 sm:h-18 rounded-full overflow-hidden relative">
                     <img
                       src={story.image}
                       alt={story.title}

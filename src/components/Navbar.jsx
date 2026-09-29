@@ -152,35 +152,39 @@ export const Navbar = ({
       </div>
 
       {/* Main Header */}
-      <div className="container mx-auto px-4 py-3 sm:py-4">
-        <div className="flex items-center justify-between gap-4">
+      <div className="container mx-auto px-3 sm:px-4 py-2.5 sm:py-4">
+        <div className="flex items-center justify-between gap-2 sm:gap-4">
           
-          {/* Mobile Menu Trigger */}
-          <button 
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-2 text-stone-700 hover:text-amber-900 focus:outline-none cursor-pointer"
-            aria-label="Toggle menu"
-          >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          {/* Left: Mobile Menu Trigger + Brand Logo */}
+          <div className="flex items-center gap-1.5 sm:gap-3 min-w-0 flex-1">
+            {/* Mobile Menu Trigger */}
+            <button 
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden p-1.5 text-stone-700 hover:text-amber-900 focus:outline-none cursor-pointer shrink-0 -ml-1"
+              aria-label="Toggle menu"
+            >
+              {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+            </button>
 
-          {/* Boutique Brand Logo */}
-          <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-amber-700 to-amber-600 flex items-center justify-center shadow-md border border-amber-300 text-white">
-              <Crown size={20} />
-            </div>
-            <a href="#" className="flex flex-col">
-              <span className="font-heading text-lg sm:text-2xl font-extrabold tracking-widest text-stone-900 leading-none">
-                {settings.storeName || "AURA ETHNIC"}
-              </span>
-              <span className="text-[10px] sm:text-[11px] tracking-widest text-amber-800 uppercase font-extrabold mt-0.5">
-                Women's Luxury Fashion & Kurtis
-              </span>
+            {/* Boutique Brand Logo */}
+            <a href="#" className="flex items-center gap-2 min-w-0 overflow-hidden">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-tr from-amber-700 to-amber-600 flex items-center justify-center shadow-md border border-amber-300 text-white shrink-0">
+                <Crown size={18} className="sm:hidden" />
+                <Crown size={20} className="hidden sm:inline" />
+              </div>
+              <div className="flex flex-col min-w-0">
+                <span className="font-heading text-sm xs:text-base sm:text-2xl font-extrabold tracking-wider sm:tracking-widest text-stone-900 leading-tight truncate">
+                  {settings.storeName || "AURA ETHNIC"}
+                </span>
+                <span className="text-[9px] sm:text-[11px] tracking-wider sm:tracking-widest text-amber-800 uppercase font-extrabold truncate hidden xs:inline">
+                  Women's Luxury Fashion & Kurtis
+                </span>
+              </div>
             </a>
           </div>
 
           {/* Desktop Search Bar with Live Suggestions Dropdown */}
-          <div ref={searchContainerRef} className="hidden md:flex flex-1 max-w-md mx-6 relative">
+          <div ref={searchContainerRef} className="hidden md:flex flex-1 max-w-md mx-4 lg:mx-6 relative">
             <form onSubmit={handleSearchSubmit} className="relative w-full">
               <input
                 type="text"
@@ -297,14 +301,14 @@ export const Navbar = ({
           </div>
 
           {/* Action Icons */}
-          <div className="flex items-center gap-2 sm:gap-4">
+          <div className="flex items-center gap-1 sm:gap-3 shrink-0">
             {/* Mobile Search Toggle */}
             <button 
               onClick={() => setIsSearchOpen(!isSearchOpen)}
-              className="md:hidden p-2 text-stone-700 hover:text-amber-900 rounded-full hover:bg-stone-100 cursor-pointer"
+              className="md:hidden p-1.5 text-stone-700 hover:text-amber-900 rounded-full hover:bg-stone-100 cursor-pointer"
               aria-label="Search"
             >
-              <Search size={21} />
+              <Search size={19} />
             </button>
 
             {/* Direct WhatsApp / Telegram Quick Contact Button */}
@@ -335,21 +339,21 @@ export const Navbar = ({
             {/* Admin Login Button (Mobile/Tablet quick icon) */}
             <button
               onClick={onOpenAdmin}
-              className="sm:hidden p-2 text-stone-700 hover:text-amber-900 rounded-full hover:bg-stone-100 cursor-pointer"
+              className="sm:hidden p-1.5 text-stone-700 hover:text-amber-900 rounded-full hover:bg-stone-100 cursor-pointer"
               title="Admin Panel"
             >
-              <Lock size={19} />
+              <Lock size={17} />
             </button>
 
             {/* Cart Button */}
             <button
               onClick={onOpenCart}
-              className="relative flex items-center gap-2 px-3.5 sm:px-4 py-2 bg-gradient-to-r from-amber-700 via-amber-800 to-stone-900 text-white rounded-full hover:opacity-95 transition-all shadow-md active:scale-95 group cursor-pointer"
+              className="relative flex items-center gap-1.5 px-2.5 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-amber-700 via-amber-800 to-stone-900 text-white rounded-full hover:opacity-95 transition-all shadow-md active:scale-95 group cursor-pointer"
               aria-label="View Shopping Cart"
             >
-              <ShoppingBag size={19} className="text-amber-200 group-hover:scale-110 transition-transform" />
+              <ShoppingBag size={17} className="text-amber-200 group-hover:scale-110 transition-transform" />
               <span className="hidden sm:inline font-bold text-xs tracking-wide">Cart</span>
-              <span className="w-5 h-5 bg-amber-400 text-stone-950 text-xs font-black rounded-full flex items-center justify-center shadow-xs">
+              <span className="w-4.5 h-4.5 bg-amber-400 text-stone-950 text-[10px] font-black rounded-full flex items-center justify-center shadow-xs">
                 {cartCount}
               </span>
             </button>

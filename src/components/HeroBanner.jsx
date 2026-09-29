@@ -19,25 +19,25 @@ export const HeroBanner = ({ onExploreClick, settings }) => {
         <div className="absolute -top-24 -right-24 w-96 h-96 bg-amber-400/15 rounded-full blur-3xl pointer-events-none"></div>
         <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-rose-400/10 rounded-full blur-3xl pointer-events-none"></div>
 
-        <div className="relative grid grid-cols-1 lg:grid-cols-12 gap-8 items-center p-6 sm:p-10 lg:p-14">
+        <div className="relative grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-center p-4 sm:p-10 lg:p-14">
           
           {/* Left Text Content */}
-          <div className="lg:col-span-7 space-y-4 sm:space-y-6 text-center lg:text-left z-10">
+          <div className="lg:col-span-7 space-y-3.5 sm:space-y-6 text-center lg:text-left z-10">
             
             {/* Top Pill */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/90 border border-amber-300/80 text-amber-900 text-xs sm:text-sm font-bold tracking-wider uppercase shadow-xs backdrop-blur-md">
-              <Sparkles size={14} className="text-amber-600 animate-spin" style={{ animationDuration: '6s' }} />
-              <span>Spring / Summer 2026 • Curated Luxury Collection</span>
+            <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full bg-white/95 border border-amber-300/80 text-amber-900 text-[10px] sm:text-xs md:text-sm font-bold tracking-wide sm:tracking-wider uppercase shadow-xs backdrop-blur-md max-w-full">
+              <Sparkles size={12} className="text-amber-600 animate-spin shrink-0" style={{ animationDuration: '6s' }} />
+              <span className="truncate">Spring/Summer 2026 • Luxury Collection</span>
             </div>
 
             {/* Main Headline */}
-            <h1 className="font-heading text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight text-stone-900">
+            <h1 className="font-heading text-2xl xs:text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight text-stone-900">
               Grace & Timeless <br className="hidden sm:inline" />
               <span className="gold-gradient-text italic font-bold">Women's Couture</span>
             </h1>
 
             {/* Description */}
-            <p className="text-stone-600 text-sm sm:text-base lg:text-lg max-w-xl mx-auto lg:mx-0 font-normal leading-relaxed">
+            <p className="text-stone-600 text-xs sm:text-base lg:text-lg max-w-xl mx-auto lg:mx-0 font-normal leading-relaxed">
               Discover authentic handcrafted Lucknowi Chikankari, Banarasi Pure Silk Sarees, and breathable Jaipur Cotton Kurtis. Add to cart & place direct instant orders on {channelLabel}.
             </p>
 
