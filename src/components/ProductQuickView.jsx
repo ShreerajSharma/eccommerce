@@ -17,6 +17,7 @@ import {
   Send 
 } from 'lucide-react';
 import { generateSingleProductChannelUrl } from '../utils/whatsapp';
+import { normalizeImageUrl } from '../utils/imageUrl';
 
 export const ProductQuickView = ({ product, onClose, onAddToCart, settings = {} }) => {
   if (!product) return null;
@@ -84,9 +85,13 @@ export const ProductQuickView = ({ product, onClose, onAddToCart, settings = {} 
                 initial={{ opacity: 0.7 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.3 }}
-                src={selectedImage || product.image}
+                src={normalizeImageUrl(selectedImage || product.image)}
                 alt={product.name}
                 className="w-full h-full object-cover object-top"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=800&q=80";
+                }}
               />
               {product.badge && (
                 <span className="absolute top-2.5 left-2.5 royal-maroon-bg text-gold-100 text-[10px] sm:text-xs font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider border border-gold-400/40">
@@ -112,7 +117,7 @@ export const ProductQuickView = ({ product, onClose, onAddToCart, settings = {} 
                       selectedImage === img ? 'border-[#700b1d] scale-105 shadow-sm' : 'border-transparent opacity-70 hover:opacity-100'
                     }`}
                   >
-                    <img src={img} alt="" className="w-full h-full object-cover object-top" />
+                    <img src={normalizeImageUrl(img)} alt="" className="w-full h-full object-cover object-top" />
                   </button>
                 ))}
               </div>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ShoppingBag, Eye, Star, MessageCircle, Check, Sparkles, Heart, Zap, Send } from 'lucide-react';
 import { generateSingleProductChannelUrl } from '../utils/whatsapp';
+import { normalizeImageUrl } from '../utils/imageUrl';
 
 export const ProductCard = ({ 
   product, 
@@ -47,10 +48,14 @@ export const ProductCard = ({
       {/* Top Image Container */}
       <div className="relative aspect-[3/4] w-full overflow-hidden bg-stone-100">
         <img
-          src={product.image}
+          src={normalizeImageUrl(product.image)}
           alt={product.name}
           className="w-full h-full object-cover object-top group-hover:scale-108 transition-transform duration-700 ease-out"
           loading="lazy"
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=800&q=80";
+          }}
         />
 
         {/* Wishlist Floating Button */}

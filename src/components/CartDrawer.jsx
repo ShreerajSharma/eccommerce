@@ -19,6 +19,7 @@ import {
   Send
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { normalizeImageUrl } from '../utils/imageUrl';
 
 const FREE_SHIPPING_THRESHOLD = 1499;
 
@@ -202,9 +203,13 @@ export const CartDrawer = ({
                       {/* Thumbnail */}
                       <div className="w-16 h-20 rounded-xl overflow-hidden bg-stone-100 border border-stone-200 shrink-0">
                         <img
-                          src={item.image}
+                          src={normalizeImageUrl(item.image)}
                           alt={item.name}
                           className="w-full h-full object-cover object-top"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=800&q=80";
+                          }}
                         />
                       </div>
 

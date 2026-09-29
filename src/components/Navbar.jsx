@@ -19,6 +19,7 @@ import {
   Send
 } from 'lucide-react';
 import { cleanTelegramHandle, getDirectChannelLink } from '../utils/whatsapp';
+import { normalizeImageUrl } from '../utils/imageUrl';
 
 const TRENDING_SEARCHES = [
   "Anarkali Kurti",
@@ -223,9 +224,13 @@ export const Navbar = ({
                           >
                             <div className="flex items-center gap-3">
                               <img
-                                src={item.image}
+                                src={normalizeImageUrl(item.image)}
                                 alt={item.name}
                                 className="w-10 h-12 object-cover object-top rounded-lg border border-stone-200"
+                                onError={(e) => {
+                                  e.target.onerror = null;
+                                  e.target.src = "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=800&q=80";
+                                }}
                               />
                               <div>
                                 <h4 className="text-xs font-bold text-stone-900 group-hover:text-amber-900 line-clamp-1">

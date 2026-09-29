@@ -51,6 +51,7 @@ import {
 import { SIZES, INITIAL_PRODUCTS, DEFAULT_CATEGORIES } from '../../data/initialProducts';
 import { INITIAL_COUPONS, INITIAL_REVIEWS } from '../../data/initialCoupons';
 import { OfficialInvoiceModal } from './OfficialInvoiceModal';
+import { normalizeImageUrl, isGoogleDriveUrl } from '../../utils/imageUrl';
 
 export const AdminPage = ({ 
   products = [], 
@@ -2079,21 +2080,35 @@ export const AdminPage = ({
                 />
               </div>
 
-              {/* Photo Upload */}
+              {/* Photo Upload with Google Drive & Cloud Link Auto-Conversion */}
               <div className="p-4 bg-amber-50/60 rounded-2xl border border-amber-200 space-y-3">
-                <label className="block font-bold text-stone-800 uppercase tracking-wider flex items-center gap-1.5">
-                  <ImageIcon size={14} className="text-amber-700" />
-                  <span>Item Photo (Upload File or Enter Image URL)</span>
-                </label>
+                <div className="flex items-center justify-between">
+                  <label className="block font-bold text-stone-800 uppercase tracking-wider flex items-center gap-1.5 text-xs">
+                    <ImageIcon size={14} className="text-[#700b1d]" />
+                    <span>Item Photo (Google Drive Link, Image URL, or Upload)</span>
+                  </label>
+                  <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full border border-emerald-300">
+                    ⚡ Google Drive Supported
+                  </span>
+                </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
                   <div className="sm:col-span-3">
-                    <div className="aspect-[3/4] w-24 mx-auto rounded-xl overflow-hidden border-2 border-gold-400 shadow-sm bg-stone-100">
+                    <div className="aspect-[3/4] w-24 mx-auto rounded-xl overflow-hidden border-2 border-gold-400 shadow-sm bg-stone-100 relative group">
                       {formData.image ? (
-                        <img src={formData.image} alt="Preview" className="w-full h-full object-cover object-top" />
+                        <img 
+                          src={normalizeImageUrl(formData.image)} 
+                          alt="Preview" 
+                          className="w-full h-full object-cover object-top"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=800&q=80";
+                          }}
+                        />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-stone-400 text-[10px]">
-                          No Photo
+                        <div className="w-full h-full flex flex-col items-center justify-center text-stone-400 text-[10px] p-2 text-center">
+                          <ImageIcon size={18} className="mb-1 text-stone-300" />
+                          <span>No Photo</span>
                         </div>
                       )}
                     </div>
@@ -2101,23 +2116,36 @@ export const AdminPage = ({
 
                   <div className="sm:col-span-9 space-y-2">
                     <div>
-                      <span className="text-[11px] font-semibold text-stone-600 block mb-1">Option 1: Image URL</span>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-[11px] font-semibold text-stone-700">Option 1: Image URL or Google Drive Link</span>
+                        {isGoogleDriveUrl(formData.image) && (
+                          <span className="text-[10px] text-emerald-700 font-bold flex items-center gap-1">
+                            <Check size={11} /> Google Drive link converted
+                          </span>
+                        )}
+                      </div>
                       <input
-                        type="url"
-                        placeholder="https://images.unsplash.com/..."
+                        type="text"
+                        placeholder="Paste image URL or Google Drive link (https://drive.google.com/...)"
                         value={formData.image}
-                        onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                        className="w-full px-3 py-1.5 bg-white border border-stone-300 rounded-lg text-xs"
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setFormData({ ...formData, image: normalizeImageUrl(val) });
+                        }}
+                        className="w-full px-3 py-1.5 bg-white border border-stone-300 rounded-lg text-xs focus:outline-none focus:border-[#700b1d] shadow-xs"
                       />
+                      <p className="text-[10px] text-stone-500 mt-1">
+                        💡 <em>Tip: Google Drive link ko public ("Anyone with the link can view") rakhein.</em>
+                      </p>
                     </div>
 
                     <div>
-                      <span className="text-[11px] font-semibold text-stone-600 block mb-1">Option 2: Upload from Device</span>
+                      <span className="text-[11px] font-semibold text-stone-700 block mb-1">Option 2: Upload from Device</span>
                       <input
                         type="file"
                         accept="image/*"
                         onChange={handleProductFileUpload}
-                        className="w-full text-xs text-stone-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-brand-900 file:text-gold-200 hover:file:bg-brand-950 cursor-pointer"
+                        className="w-full text-xs text-stone-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-stone-900 file:text-gold-200 hover:file:bg-black cursor-pointer"
                       />
                     </div>
                   </div>
@@ -2348,7 +2376,15 @@ export const AdminPage = ({
                 <div className="flex items-center gap-3">
                   <div className="w-14 h-14 rounded-2xl overflow-hidden border border-gold-400 bg-white flex items-center justify-center text-2xl shadow-sm shrink-0">
                     {categoryFormData.image ? (
-                      <img src={categoryFormData.image} alt="Preview" className="w-full h-full object-cover" />
+                      <img 
+                        src={normalizeImageUrl(categoryFormData.image)} 
+                        alt="Preview" 
+                        className="w-full h-full object-cover" 
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=400&q=80";
+                        }}
+                      />
                     ) : (
                       categoryFormData.icon || '👗'
                     )}
@@ -2368,15 +2404,25 @@ export const AdminPage = ({
                 </div>
 
                 <div>
-                  <label className="block font-bold text-stone-800 uppercase tracking-wider text-[11px] mb-1">
-                    Category Photo / Banner URL
-                  </label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block font-bold text-stone-800 uppercase tracking-wider text-[11px]">
+                      Category Photo / Google Drive Link
+                    </label>
+                    {isGoogleDriveUrl(categoryFormData.image) && (
+                      <span className="text-[10px] text-emerald-700 font-bold flex items-center gap-1">
+                        <Check size={11} /> Drive converted
+                      </span>
+                    )}
+                  </div>
                   <input
-                    type="url"
-                    placeholder="https://images.unsplash.com/..."
+                    type="text"
+                    placeholder="Paste image URL or Google Drive link (https://drive.google.com/...)"
                     value={categoryFormData.image}
-                    onChange={(e) => setCategoryFormData({ ...categoryFormData, image: e.target.value })}
-                    className="w-full px-3 py-1.5 bg-white border border-stone-300 rounded-xl text-xs"
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setCategoryFormData({ ...categoryFormData, image: normalizeImageUrl(val) });
+                    }}
+                    className="w-full px-3 py-1.5 bg-white border border-stone-300 rounded-xl text-xs focus:outline-none focus:border-[#700b1d]"
                   />
                 </div>
 
@@ -2386,7 +2432,7 @@ export const AdminPage = ({
                     type="file"
                     accept="image/*"
                     onChange={handleCategoryFileUpload}
-                    className="w-full text-xs text-stone-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-semibold file:bg-brand-900 file:text-gold-200 cursor-pointer"
+                    className="w-full text-xs text-stone-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-semibold file:bg-stone-900 file:text-gold-200 cursor-pointer"
                   />
                 </div>
               </div>
