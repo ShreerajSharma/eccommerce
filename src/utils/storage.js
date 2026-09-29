@@ -1,0 +1,162 @@
+import { INITIAL_PRODUCTS, DEFAULT_CATEGORIES } from '../data/initialProducts';
+import { INITIAL_SETTINGS } from '../data/initialSettings';
+import { INITIAL_COUPONS, INITIAL_REVIEWS } from '../data/initialCoupons';
+
+const PRODUCTS_KEY = 'aura_kurti_products_v2';
+const CATEGORIES_KEY = 'aura_kurti_categories_v2';
+const SETTINGS_KEY = 'aura_kurti_settings_v2';
+const ORDERS_KEY = 'aura_kurti_orders_v2';
+const ADMIN_AUTH_KEY = 'aura_kurti_admin_auth_v2';
+const COUPONS_KEY = 'aura_kurti_coupons_v2';
+const REVIEWS_KEY = 'aura_kurti_reviews_v2';
+const WISHLIST_KEY = 'aura_kurti_wishlist_v2';
+
+export const getStoredCategories = () => {
+  try {
+    const data = localStorage.getItem(CATEGORIES_KEY);
+    if (data) return JSON.parse(data);
+  } catch (e) {
+    console.error("Failed to load categories from storage", e);
+  }
+  return DEFAULT_CATEGORIES;
+};
+
+export const saveStoredCategories = (categories) => {
+  try {
+    localStorage.setItem(CATEGORIES_KEY, JSON.stringify(categories));
+  } catch (e) {
+    console.error("Failed to save categories", e);
+  }
+};
+
+export const getStoredProducts = () => {
+  try {
+    const data = localStorage.getItem(PRODUCTS_KEY);
+    if (data) return JSON.parse(data);
+  } catch (e) {
+    console.error("Failed to load products from storage", e);
+  }
+  return INITIAL_PRODUCTS;
+};
+
+export const saveStoredProducts = (products) => {
+  try {
+    localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
+  } catch (e) {
+    console.error("Failed to save products", e);
+  }
+};
+
+export const getStoredSettings = () => {
+  try {
+    const data = localStorage.getItem(SETTINGS_KEY);
+    if (data) return JSON.parse(data);
+  } catch (e) {
+    console.error("Failed to load settings", e);
+  }
+  return INITIAL_SETTINGS;
+};
+
+export const saveStoredSettings = (settings) => {
+  try {
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+  } catch (e) {
+    console.error("Failed to save settings", e);
+  }
+};
+
+export const getStoredOrders = () => {
+  try {
+    const data = localStorage.getItem(ORDERS_KEY);
+    if (data) return JSON.parse(data);
+  } catch (e) {
+    console.error("Failed to load orders", e);
+  }
+  return [];
+};
+
+export const saveNewOrder = (order) => {
+  try {
+    const orders = getStoredOrders();
+    const updated = [order, ...orders];
+    localStorage.setItem(ORDERS_KEY, JSON.stringify(updated));
+    return updated;
+  } catch (e) {
+    console.error("Failed to save order", e);
+    return [];
+  }
+};
+
+export const getStoredCoupons = () => {
+  try {
+    const data = localStorage.getItem(COUPONS_KEY);
+    if (data) return JSON.parse(data);
+  } catch (e) {
+    console.error("Failed to load coupons", e);
+  }
+  return INITIAL_COUPONS;
+};
+
+export const saveStoredCoupons = (coupons) => {
+  try {
+    localStorage.setItem(COUPONS_KEY, JSON.stringify(coupons));
+  } catch (e) {
+    console.error("Failed to save coupons", e);
+  }
+};
+
+export const getStoredReviews = () => {
+  try {
+    const data = localStorage.getItem(REVIEWS_KEY);
+    if (data) return JSON.parse(data);
+  } catch (e) {
+    console.error("Failed to load reviews", e);
+  }
+  return INITIAL_REVIEWS;
+};
+
+export const saveStoredReviews = (reviews) => {
+  try {
+    localStorage.setItem(REVIEWS_KEY, JSON.stringify(reviews));
+  } catch (e) {
+    console.error("Failed to save reviews", e);
+  }
+};
+
+export const getStoredWishlist = () => {
+  try {
+    const data = localStorage.getItem(WISHLIST_KEY);
+    if (data) return JSON.parse(data);
+  } catch (e) {
+    console.error("Failed to load wishlist", e);
+  }
+  return [];
+};
+
+export const saveStoredWishlist = (wishlist) => {
+  try {
+    localStorage.setItem(WISHLIST_KEY, JSON.stringify(wishlist));
+  } catch (e) {
+    console.error("Failed to save wishlist", e);
+  }
+};
+
+export const getAdminAuthStatus = () => {
+  try {
+    return localStorage.getItem(ADMIN_AUTH_KEY) === 'true';
+  } catch (e) {
+    return false;
+  }
+};
+
+export const setAdminAuthStatus = (status) => {
+  try {
+    if (status) {
+      localStorage.setItem(ADMIN_AUTH_KEY, 'true');
+    } else {
+      localStorage.removeItem(ADMIN_AUTH_KEY);
+    }
+  } catch (e) {
+    console.error("Failed to set admin auth", e);
+  }
+};

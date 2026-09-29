@@ -1,0 +1,436 @@
+import React, { useState } from 'react';
+import { 
+  X, 
+  MessageCircle, 
+  CheckCircle2, 
+  MapPin, 
+  User, 
+  Phone, 
+  CreditCard, 
+  Sparkles, 
+  ArrowRight,
+  ShieldCheck,
+  ShoppingBag,
+  Send
+} from 'lucide-react';
+import confetti from 'canvas-confetti';
+import { generateOrderUrlByChannel, cleanTelegramHandle } from '../utils/whatsapp';
+import { saveNewOrder } from '../utils/storage';
+
+export const WhatsAppCheckoutModal = ({ 
+  isOpen, 
+  onClose, 
+  cartItems, 
+  appliedPromo, 
+  settings = {}, 
+  onOrderSuccess 
+}) => {
+  if (!isOpen || cartItems.length === 0) return null;
+
+  const defaultChannel = settings.orderChannel === 'telegram' ? 'telegram' : 'whatsapp';
+  const [selectedChannel, setSelectedChannel] = useState(defaultChannel);
+
+  const subtotal = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+  const discountAmount = appliedPromo ? Math.round(subtotal * 0.10) : 0;
+  const grandTotal = Math.max(0, subtotal - discountAmount);
+
+  const isTelegramActive = settings.orderChannel === 'telegram' || (settings.orderChannel === 'both' && selectedChannel === 'telegram');
+  const activeChannelName = isTelegramActive ? 'Telegram' : 'WhatsApp';
+
+  const [customer, setCustomer] = useState({
+    name: '',
+    phone: '',
+    address: '',
+    city: '',
+    state: '',
+    pincode: '',
+    paymentMethod: 'Cash On Delivery (COD)',
+    notes: ''
+  });
+
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [orderPlaced, setOrderPlaced] = useState(false);
+
+  const validate = () => {
+    const errs = {};
+    if (!customer.name.trim()) errs.name = 'Please enter your full name';
+    if (!customer.phone.trim() || customer.phone.length < 10) errs.phone = 'Please enter a valid 10-digit mobile number';
+    if (!customer.address.trim()) errs.address = 'Please enter delivery address';
+    if (!customer.pincode.trim() || customer.pincode.length < 6) errs.pincode = 'Please enter 6-digit pincode';
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!validate()) return;
+
+    setIsSubmitting(true);
+
+    const targetChannel = settings.orderChannel === 'both' ? selectedChannel : (settings.orderChannel || 'whatsapp');
+
+    const { url, rawMessage } = generateOrderUrlByChannel({
+      channel: targetChannel,
+      customer,
+      cartItems,
+      totalPrice: grandTotal,
+      settings,
+      discount: discountAmount
+    });
+
+    // Save order record
+    const newOrder = {
+      id: `ORD-${Date.now()}`,
+      createdAt: new Date().toISOString(),
+      customer,
+      items: cartItems,
+      totalAmount: grandTotal,
+      discount: discountAmount,
+      promoCode: appliedPromo,
+      channel: targetChannel,
+      status: `${activeChannelName} Inquiry Sent`
+    };
+    saveNewOrder(newOrder);
+
+    // Fire Confetti
+    try {
+      confetti({
+        particleCount: 120,
+        spread: 80,
+        origin: { y: 0.6 }
+      });
+    } catch (err) {
+      console.log("Confetti trigger", err);
+    }
+
+    // Open WhatsApp / Telegram
+    window.open(url, '_blank');
+
+    setOrderPlaced(true);
+    setIsSubmitting(false);
+
+    if (onOrderSuccess) {
+      setTimeout(() => {
+        onOrderSuccess();
+      }, 1000);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-stone-950/75 backdrop-blur-sm overflow-y-auto animate-fade-in">
+      <div 
+        className="relative w-full max-w-2xl bg-[#fdfcf9] rounded-3xl shadow-2xl border border-gold-300/60 overflow-hidden my-auto"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className={`p-4 sm:p-5 text-white flex items-center justify-between border-b ${
+          isTelegramActive 
+            ? 'bg-gradient-to-r from-sky-700 via-sky-800 to-stone-900 border-sky-500/40' 
+            : 'royal-maroon-bg text-gold-100 border-gold-500/40'
+        }`}>
+          <div className="flex items-center gap-2.5">
+            <div className={`w-9 h-9 rounded-full flex items-center justify-center text-white shadow-sm ${
+              isTelegramActive ? 'bg-sky-500' : 'bg-emerald-500'
+            }`}>
+              {isTelegramActive ? <Send size={18} /> : <MessageCircle size={18} />}
+            </div>
+            <div>
+              <h2 className="font-serif text-base sm:text-lg font-bold tracking-wide">
+                Direct {activeChannelName} Checkout
+              </h2>
+              <p className="text-[11px] opacity-90">
+                1-Step Confirmation with Store Owner ({isTelegramActive ? `@${cleanTelegramHandle(settings.telegramUsername)}` : settings.whatsappNumber})
+              </p>
+            </div>
+          </div>
+
+          <button
+            onClick={onClose}
+            className="p-1.5 rounded-full text-stone-200 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+          >
+            <X size={20} />
+          </button>
+        </div>
+
+        {orderPlaced ? (
+          /* Order Confirmation Success Screen */
+          <div className="p-8 text-center space-y-5 animate-fadeIn">
+            <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto shadow-md ${
+              isTelegramActive ? 'bg-sky-100 text-sky-600' : 'bg-emerald-100 text-emerald-600'
+            }`}>
+              <CheckCircle2 size={40} />
+            </div>
+
+            <div>
+              <h3 className="font-serif text-2xl font-bold text-stone-900">
+                Redirecting to {activeChannelName}!
+              </h3>
+              <p className="text-sm text-stone-600 max-w-md mx-auto mt-2">
+                Your order receipt has been prepared and {activeChannelName} has opened. Please tap <strong>Send</strong> in {activeChannelName} to submit your order to our boutique team.
+              </p>
+            </div>
+
+            <div className="p-4 bg-amber-50 rounded-2xl border border-amber-200 max-w-md mx-auto text-xs text-stone-700 space-y-1">
+              <p className="font-bold text-amber-900">Order Reference: {customer.name}</p>
+              <p>Total Bill: <strong>₹{grandTotal.toLocaleString('en-IN')}</strong> ({customer.paymentMethod})</p>
+              <p>Delivery To: {customer.address}, {customer.pincode}</p>
+            </div>
+
+            <button
+              onClick={() => {
+                setOrderPlaced(false);
+                onClose();
+              }}
+              className="px-8 py-3 royal-maroon-bg text-gold-100 font-bold text-sm rounded-full shadow-lg hover:opacity-95 transition-all cursor-pointer"
+            >
+              Continue Shopping
+            </button>
+          </div>
+        ) : (
+          /* Checkout Form */
+          <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4 max-h-[80vh] overflow-y-auto">
+            
+            {/* Quick Order Bill Strip */}
+            <div className="bg-gold-50/70 border border-gold-300/80 rounded-2xl p-3.5 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <ShoppingBag size={18} className="text-brand-900" />
+                <span className="text-xs font-bold text-stone-800">
+                  {cartItems.reduce((a, c) => a + c.quantity, 0)} Items in Order
+                </span>
+              </div>
+              <div className="text-right">
+                <span className="text-xs text-stone-500 block">Total to Pay:</span>
+                <span className="text-base font-extrabold text-brand-950">
+                  ₹{grandTotal.toLocaleString('en-IN')}
+                </span>
+              </div>
+            </div>
+
+            {/* DUAL MODE CHANNEL SELECTOR (When 'both' is enabled by Admin) */}
+            {settings.orderChannel === 'both' && (
+              <div className="p-3 bg-stone-100 rounded-2xl border border-stone-200 space-y-1.5">
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-stone-700">
+                  Select Your Preferred Ordering Channel:
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setSelectedChannel('whatsapp')}
+                    className={`py-2 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                      selectedChannel === 'whatsapp'
+                        ? 'bg-emerald-600 text-white shadow-md'
+                        : 'bg-white text-stone-700 border border-stone-300 hover:bg-stone-50'
+                    }`}
+                  >
+                    <MessageCircle size={15} />
+                    <span>WhatsApp</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setSelectedChannel('telegram')}
+                    className={`py-2 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                      selectedChannel === 'telegram'
+                        ? 'bg-sky-500 text-white shadow-md'
+                        : 'bg-white text-stone-700 border border-stone-300 hover:bg-stone-50'
+                    }`}
+                  >
+                    <Send size={14} />
+                    <span>Telegram</span>
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Customer Inputs */}
+            <div className="space-y-3">
+              <p className="text-xs font-bold uppercase tracking-wider text-gold-800 flex items-center gap-1.5">
+                <User size={14} />
+                <span>1. Contact & Delivery Information</span>
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {/* Name */}
+                <div>
+                  <label className="block text-xs font-semibold text-stone-700 mb-1">
+                    Your Full Name <span className="text-rose-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Ananya Sharma"
+                    value={customer.name}
+                    onChange={(e) => setCustomer({ ...customer, name: e.target.value })}
+                    className={`w-full px-3 py-2 bg-white border rounded-xl text-xs sm:text-sm focus:outline-none focus:border-brand-700 ${
+                      errors.name ? 'border-rose-500' : 'border-stone-300'
+                    }`}
+                  />
+                  {errors.name && <p className="text-[10px] text-rose-500 mt-0.5">{errors.name}</p>}
+                </div>
+
+                {/* Contact Phone */}
+                <div>
+                  <label className="block text-xs font-semibold text-stone-700 mb-1">
+                    Mobile Number <span className="text-rose-500">*</span>
+                  </label>
+                  <input
+                    type="tel"
+                    required
+                    placeholder="e.g. 9876543210"
+                    value={customer.phone}
+                    onChange={(e) => setCustomer({ ...customer, phone: e.target.value })}
+                    className={`w-full px-3 py-2 bg-white border rounded-xl text-xs sm:text-sm focus:outline-none focus:border-brand-700 ${
+                      errors.phone ? 'border-rose-500' : 'border-stone-300'
+                    }`}
+                  />
+                  {errors.phone && <p className="text-[10px] text-rose-500 mt-0.5">{errors.phone}</p>}
+                </div>
+              </div>
+
+              {/* Complete Address */}
+              <div>
+                <label className="block text-xs font-semibold text-stone-700 mb-1">
+                  Full Delivery Address (House/Flat No, Street, Landmark) <span className="text-rose-500">*</span>
+                </label>
+                <textarea
+                  rows={2}
+                  required
+                  placeholder="e.g. Flat 402, Lotus Tower, Near Diamond Plaza"
+                  value={customer.address}
+                  onChange={(e) => setCustomer({ ...customer, address: e.target.value })}
+                  className={`w-full px-3 py-2 bg-white border rounded-xl text-xs sm:text-sm focus:outline-none focus:border-brand-700 ${
+                    errors.address ? 'border-rose-500' : 'border-stone-300'
+                  }`}
+                />
+                {errors.address && <p className="text-[10px] text-rose-500 mt-0.5">{errors.address}</p>}
+              </div>
+
+              {/* City, State, Pincode */}
+              <div className="grid grid-cols-3 gap-2">
+                <div>
+                  <label className="block text-xs font-semibold text-stone-700 mb-1">City</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Jaipur"
+                    value={customer.city}
+                    onChange={(e) => setCustomer({ ...customer, city: e.target.value })}
+                    className="w-full px-3 py-2 bg-white border border-stone-300 rounded-xl text-xs focus:outline-none focus:border-brand-700"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-stone-700 mb-1">State</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Rajasthan"
+                    value={customer.state}
+                    onChange={(e) => setCustomer({ ...customer, state: e.target.value })}
+                    className="w-full px-3 py-2 bg-white border border-stone-300 rounded-xl text-xs focus:outline-none focus:border-brand-700"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-stone-700 mb-1">
+                    Pincode <span className="text-rose-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    maxLength={6}
+                    placeholder="e.g. 302001"
+                    value={customer.pincode}
+                    onChange={(e) => setCustomer({ ...customer, pincode: e.target.value })}
+                    className={`w-full px-3 py-2 bg-white border rounded-xl text-xs focus:outline-none focus:border-brand-700 ${
+                      errors.pincode ? 'border-rose-500' : 'border-stone-300'
+                    }`}
+                  />
+                  {errors.pincode && <p className="text-[10px] text-rose-500 mt-0.5">{errors.pincode}</p>}
+                </div>
+              </div>
+            </div>
+
+            {/* Payment Method Selector */}
+            <div className="pt-2 border-t border-stone-200">
+              <p className="text-xs font-bold uppercase tracking-wider text-gold-800 flex items-center gap-1.5 mb-2">
+                <CreditCard size={14} />
+                <span>2. Preferred Payment Mode</span>
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {[
+                  { id: 'Cash On Delivery (COD)', label: 'Cash on Delivery (COD)', desc: 'Pay when delivered at doorstep' },
+                  { id: 'UPI / QR Code on Delivery', label: 'UPI / Online Transfer', desc: 'GooglePay / PhonePe / Paytm' }
+                ].map((pm) => (
+                  <label
+                    key={pm.id}
+                    className={`flex items-start gap-2.5 p-2.5 rounded-xl border cursor-pointer transition-all ${
+                      customer.paymentMethod === pm.id
+                        ? 'bg-gold-50/80 border-brand-800 shadow-sm'
+                        : 'bg-white border-stone-200 hover:border-stone-400'
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="paymentMethod"
+                      value={pm.id}
+                      checked={customer.paymentMethod === pm.id}
+                      onChange={(e) => setCustomer({ ...customer, paymentMethod: e.target.value })}
+                      className="mt-0.5 text-brand-900 focus:ring-brand-800"
+                    />
+                    <div>
+                      <p className="text-xs font-bold text-stone-900">{pm.label}</p>
+                      <p className="text-[10px] text-stone-500">{pm.desc}</p>
+                    </div>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Special Instructions */}
+            <div>
+              <label className="block text-xs font-semibold text-stone-700 mb-1">
+                Special Request / Delivery Instructions (Optional)
+              </label>
+              <input
+                type="text"
+                placeholder="e.g. Gift wrapping requested, deliver before Friday"
+                value={customer.notes}
+                onChange={(e) => setCustomer({ ...customer, notes: e.target.value })}
+                className="w-full px-3 py-2 bg-white border border-stone-300 rounded-xl text-xs focus:outline-none focus:border-brand-700"
+              />
+            </div>
+
+            {/* Direct Channel Submit Button */}
+            <div className="pt-3">
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className={`w-full py-4 px-6 text-white font-extrabold rounded-2xl shadow-xl flex items-center justify-center gap-2.5 transition-all transform hover:scale-[1.01] active:scale-[0.98] text-sm sm:text-base cursor-pointer ${
+                  isTelegramActive
+                    ? 'bg-gradient-to-r from-sky-500 via-sky-600 to-sky-700 hover:from-sky-600 hover:to-sky-800 border border-sky-300/40'
+                    : 'bg-gradient-to-r from-emerald-600 via-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 border border-emerald-400/40'
+                }`}
+              >
+                {isTelegramActive ? (
+                  <Send size={20} className="animate-bounce" />
+                ) : (
+                  <MessageCircle size={22} className="animate-bounce" />
+                )}
+                <span>Confirm & Send Order via {activeChannelName}</span>
+                <ArrowRight size={18} />
+              </button>
+
+              <div className="flex items-center justify-center gap-2 mt-2 text-[11px] text-stone-500">
+                <ShieldCheck size={14} className={isTelegramActive ? "text-sky-600" : "text-emerald-600"} />
+                <span>Instant confirmation on {activeChannelName} with tracking details</span>
+              </div>
+            </div>
+
+          </form>
+        )}
+
+      </div>
+    </div>
+  );
+};

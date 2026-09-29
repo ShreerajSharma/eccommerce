@@ -1,0 +1,101 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #faf6f0;
+    color: #292524;
+    overflow-x: hidden;
+  }
+}
+
+/* Custom Soft Luxury Scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #f7f1e6;
+}
+::-webkit-scrollbar-thumb {
+  background: #d4b06a;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #a16207;
+}
+
+/* Luxury Light Glass & Gold Gradient Classes */
+.gold-gradient-text {
+  background: linear-gradient(135deg, #a16207 0%, #b45309 40%, #78350f 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gold-gradient-bg {
+  background: linear-gradient(135deg, #d4af37 0%, #ecd79c 50%, #b89130 100%);
+}
+
+/* Light Luxury Brand Accent (Warm Cashmere & Amber Gold) */
+.royal-maroon-bg, .brand-header-bg {
+  background: linear-gradient(135deg, #92400e 0%, #b45309 50%, #78350f 100%);
+  border-color: rgba(217, 119, 6, 0.4);
+}
+
+.light-luxe-bg {
+  background: linear-gradient(135deg, #faf4ec 0%, #f7ede0 50%, #f3e5d0 100%);
+}
+
+.card-hover-effect {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.card-hover-effect:hover {
+  transform: translateY(-5px);
+}
+
+.badge-shimmer {
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 2.5s infinite;
+}
+
+/* Official Print & PDF Styling for Invoice */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 10mm;
+  }
+
+  body {
+    background: white !important;
+    color: black !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    visibility: hidden;
+  }
+
+  .no-print, header, nav, footer, button, .modal-backdrop {
+    display: none !important;
+  }
+
+  #invoice-document {
+    visibility: visible !important;
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    border: 1px solid #333 !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 16px !important;
+    background: white !important;
+    color: black !important;
+  }
+
+  #invoice-document * {
+    visibility: visible !important;
+    color: black !important;
+  }
+}

@@ -1,0 +1,554 @@
+import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { 
+  getStoredProducts, 
+  saveStoredProducts, 
+  getStoredCategories, 
+  saveStoredCategories, 
+  getStoredSettings, 
+  saveStoredSettings, 
+  getStoredOrders, 
+  getStoredCoupons,
+  saveStoredCoupons,
+  getStoredReviews,
+  saveStoredReviews,
+  getStoredWishlist,
+  saveStoredWishlist,
+  getAdminAuthStatus, 
+  setAdminAuthStatus 
+} from './utils/storage';
+
+import { Navbar } from './components/Navbar';
+import { HeroBanner } from './components/HeroBanner';
+import { StoryReels } from './components/StoryReels';
+import { EditorialCapsules } from './components/EditorialCapsules';
+import { CategoryChips } from './components/CategoryChips';
+import { ProductCard } from './components/ProductCard';
+import { ProductQuickView } from './components/ProductQuickView';
+import { CartDrawer } from './components/CartDrawer';
+import { WhatsAppCheckoutModal } from './components/WhatsAppCheckoutModal';
+import { CustomerReviews } from './components/CustomerReviews';
+import { AdminPage } from './components/admin/AdminPage';
+import { Footer } from './components/Footer';
+
+import { 
+  Sparkles, 
+  MessageCircle, 
+  ArrowUpDown, 
+  Search, 
+  FilterX,
+  LayoutGrid,
+  Grid2X2,
+  Heart,
+  Send
+} from 'lucide-react';
+import { getDirectChannelLink } from './utils/whatsapp';
+
+export function App() {
+  // Persistent State
+  const [products, setProducts] = useState(getStoredProducts);
+  const [categories, setCategories] = useState(getStoredCategories);
+  const [settings, setSettings] = useState(getStoredSettings);
+  const [orders, setOrders] = useState(getStoredOrders);
+  const [coupons, setCoupons] = useState(getStoredCoupons);
+  const [reviews, setReviews] = useState(getStoredReviews);
+  const [wishlist, setWishlist] = useState(getStoredWishlist);
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(getAdminAuthStatus);
+
+  // View Navigation: 'store' | 'admin'
+  const [currentView, setCurrentView] = useState(() => {
+    const isHashAdmin = window.location.hash.toLowerCase().includes('admin');
+    const isQueryAdmin = window.location.search.toLowerCase().includes('admin');
+    return (isHashAdmin || isQueryAdmin) ? 'admin' : 'store';
+  });
+
+  // Grid layout view: 'grid-4' | 'grid-2' (Zara lookbook style)
+  const [gridLayout, setGridLayout] = useState('grid-4');
+
+  // Cart State
+  const [cartItems, setCartItems] = useState(() => {
+    try {
+      const saved = localStorage.getItem('aura_kurti_cart');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+  const [appliedPromo, setAppliedPromo] = useState(null);
+
+  // Filter & Search State
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState("popular"); // 'popular' | 'price-low' | 'price-high' | 'discount'
+
+  // Modals & Drawers
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [quickViewProduct, setQuickViewProduct] = useState(null);
+
+  const catalogRef = useRef(null);
+
+  // URL Hash Listener for Page Routing
+  useEffect(() => {
+    const handleHashChange = () => {
+      const isHashAdmin = window.location.hash.toLowerCase().includes('admin');
+      const isQueryAdmin = window.location.search.toLowerCase().includes('admin');
+      if (isHashAdmin || isQueryAdmin) {
+        setCurrentView('admin');
+      } else {
+        setCurrentView('store');
+      }
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  // Save cart to local storage
+  useEffect(() => {
+    try {
+      localStorage.setItem('aura_kurti_cart', JSON.stringify(cartItems));
+    } catch (e) {
+      console.error(e);
+    }
+  }, [cartItems]);
+
+  // Save wishlist
+  const handleToggleWishlist = (productId) => {
+    setWishlist(prev => {
+      const updated = prev.includes(productId) 
+        ? prev.filter(id => id !== productId)
+        : [...prev, productId];
+      saveStoredWishlist(updated);
+      return updated;
+    });
+  };
+
+  // Cart Handlers
+  const handleAddToCart = (product, selectedSize = 'M', quantity = 1) => {
+    setCartItems(prev => {
+      const existingIdx = prev.findIndex(
+        item => item.id === product.id && item.selectedSize === selectedSize
+      );
+
+      if (existingIdx > -1) {
+        const updated = [...prev];
+        updated[existingIdx].quantity += quantity;
+        return updated;
+      } else {
+        return [
+          ...prev,
+          {
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            originalPrice: product.originalPrice,
+            image: product.image,
+            category: product.category,
+            fabric: product.fabric,
+            selectedSize,
+            quantity
+          }
+        ];
+      }
+    });
+  };
+
+  const handleUpdateQuantity = (id, selectedSize, newQty) => {
+    if (newQty <= 0) {
+      handleRemoveItem(id, selectedSize);
+    } else {
+      setCartItems(prev =>
+        prev.map(item =>
+          item.id === id && item.selectedSize === selectedSize
+            ? { ...item, quantity: newQty }
+            : item
+        )
+      );
+    }
+  };
+
+  const handleRemoveItem = (id, selectedSize) => {
+    setCartItems(prev =>
+      prev.filter(item => !(item.id === id && item.selectedSize === selectedSize))
+    );
+  };
+
+  const handleClearCart = () => {
+    setCartItems([]);
+  };
+
+  // Admin Handlers
+  const handleSaveProducts = (newProducts) => {
+    setProducts(newProducts);
+    saveStoredProducts(newProducts);
+  };
+
+  const handleSaveCategories = (newCategories) => {
+    setCategories(newCategories);
+    saveStoredCategories(newCategories);
+  };
+
+  const handleSaveCoupons = (newCoupons) => {
+    setCoupons(newCoupons);
+    saveStoredCoupons(newCoupons);
+  };
+
+  const handleSaveReviews = (newReviews) => {
+    setReviews(newReviews);
+    saveStoredReviews(newReviews);
+  };
+
+  const handleSaveSettings = (newSettings) => {
+    setSettings(newSettings);
+    saveStoredSettings(newSettings);
+  };
+
+  const handleAdminLoginSuccess = () => {
+    setIsAdminLoggedIn(true);
+    setAdminAuthStatus(true);
+  };
+
+  const handleAdminLogout = () => {
+    setIsAdminLoggedIn(false);
+    setAdminAuthStatus(false);
+  };
+
+  const handleOpenAdminPage = () => {
+    window.location.hash = '#admin';
+    setCurrentView('admin');
+  };
+
+  const handleBackToStore = () => {
+    window.location.hash = '';
+    setCurrentView('store');
+  };
+
+  // Filtered & Sorted Products
+  const filteredProducts = useMemo(() => {
+    return products
+      .filter(product => {
+        const matchesCategory = selectedCategory === "All" || product.category === selectedCategory;
+        const matchesSearch = 
+          product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          product.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          (product.fabric && product.fabric.toLowerCase().includes(searchQuery.toLowerCase())) ||
+          (product.color && product.color.toLowerCase().includes(searchQuery.toLowerCase())) ||
+          (product.badge && product.badge.toLowerCase().includes(searchQuery.toLowerCase())) ||
+          (product.offer && product.offer.toLowerCase().includes(searchQuery.toLowerCase()));
+
+        return matchesCategory && matchesSearch;
+      })
+      .sort((a, b) => {
+        if (sortBy === 'price-low') return a.price - b.price;
+        if (sortBy === 'price-high') return b.price - a.price;
+        if (sortBy === 'discount') {
+          const discA = a.originalPrice ? (a.originalPrice - a.price) : 0;
+          const discB = b.originalPrice ? (b.originalPrice - b.price) : 0;
+          return discB - discA;
+        }
+        // Popular default
+        return (b.rating || 0) - (a.rating || 0);
+      });
+  }, [products, selectedCategory, searchQuery, sortBy]);
+
+  const totalCartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+
+  const scrollToCatalog = () => {
+    catalogRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  // =========================================================================
+  // RENDER DEDICATED FULL-SCREEN ADMIN PAGE
+  // =========================================================================
+  if (currentView === 'admin') {
+    return (
+      <AdminPage
+        products={products}
+        onSaveProducts={handleSaveProducts}
+        categories={categories}
+        onSaveCategories={handleSaveCategories}
+        coupons={coupons}
+        onSaveCoupons={handleSaveCoupons}
+        reviews={reviews}
+        onSaveReviews={handleSaveReviews}
+        settings={settings}
+        onSaveSettings={handleSaveSettings}
+        orders={orders}
+        isAdminLoggedIn={isAdminLoggedIn}
+        onLoginSuccess={handleAdminLoginSuccess}
+        onLogout={handleAdminLogout}
+        onBackToStore={handleBackToStore}
+      />
+    );
+  }
+
+  // =========================================================================
+  // RENDER CUSTOMER STOREFRONT (Zara / H&M Luxury Fashion Aesthetic)
+  // =========================================================================
+  return (
+    <div className="min-h-screen flex flex-col bg-[#faf7f2]">
+      
+      {/* Header & Navigation */}
+      <Navbar
+        cartCount={totalCartCount}
+        onOpenCart={() => setIsCartOpen(true)}
+        onOpenAdmin={handleOpenAdminPage}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        selectedCategory={selectedCategory}
+        onSelectCategory={setSelectedCategory}
+        categories={categories}
+        settings={settings}
+        isAdminLoggedIn={isAdminLoggedIn}
+        onLogoutAdmin={handleAdminLogout}
+        products={products}
+        onQuickView={setQuickViewProduct}
+        onScrollToCatalog={scrollToCatalog}
+      />
+
+      {/* Main Content Body */}
+      <main className="flex-1">
+        
+        {/* Zara / Instagram Style Story Highlights Bar */}
+        <StoryReels 
+          onSelectCategory={(cat) => {
+            setSelectedCategory(cat);
+            scrollToCatalog();
+          }}
+        />
+
+        {/* Luxury Hero Banner */}
+        <HeroBanner
+          onExploreClick={scrollToCatalog}
+          settings={settings}
+        />
+
+        {/* Zara / H&M Haute Couture Lookbook Editorial Capsules */}
+        <EditorialCapsules 
+          onSelectCategory={(cat) => {
+            setSelectedCategory(cat);
+            scrollToCatalog();
+          }}
+        />
+
+        {/* Women Fashion Categories Selector */}
+        <CategoryChips
+          categories={categories}
+          selectedCategory={selectedCategory}
+          onSelectCategory={setSelectedCategory}
+          products={products}
+        />
+
+        {/* Product Catalog Section */}
+        <section ref={catalogRef} className="container mx-auto px-4 py-8">
+          
+          {/* Section Header with Controls (Zara / H&M Minimalist Bar) */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-[#ebdcc7]">
+            <div>
+              <h2 className="font-heading text-2xl sm:text-3xl font-bold text-stone-900 flex items-center gap-2">
+                <span>{selectedCategory === 'All' ? "Women's Designer Collection" : selectedCategory}</span>
+                <Sparkles size={20} className="text-gold-600" />
+              </h2>
+              <p className="text-xs sm:text-sm text-stone-500 mt-0.5 font-light">
+                Handcrafted designer Sarees, Kurtis, Anarkalis, Lehengas & Western silhouettes.
+              </p>
+            </div>
+
+            {/* View Switcher & Sort Controls */}
+            <div className="flex items-center gap-3 self-end sm:self-auto flex-wrap">
+              
+              {/* Grid Switcher (2-Column Editorial vs 4-Column Dense) */}
+              <div className="hidden sm:flex items-center bg-white border border-[#ebdcc7] rounded-xl p-1 shadow-xs">
+                <button
+                  type="button"
+                  onClick={() => setGridLayout('grid-4')}
+                  className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+                    gridLayout === 'grid-4' ? 'bg-brand-900 text-gold-200 shadow-xs' : 'text-stone-400 hover:text-stone-800'
+                  }`}
+                  title="Dense Grid View"
+                >
+                  <LayoutGrid size={15} />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setGridLayout('grid-2')}
+                  className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+                    gridLayout === 'grid-2' ? 'bg-brand-900 text-gold-200 shadow-xs' : 'text-stone-400 hover:text-stone-800'
+                  }`}
+                  title="Editorial Lookbook View"
+                >
+                  <Grid2X2 size={15} />
+                </button>
+              </div>
+
+              {/* Sort Dropdown */}
+              <div className="flex items-center gap-1.5">
+                <span className="text-xs text-stone-500 font-semibold flex items-center gap-1">
+                  <ArrowUpDown size={13} /> Sort:
+                </span>
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="text-xs font-semibold bg-white border border-[#ebdcc7] text-stone-800 rounded-xl px-3 py-1.5 focus:outline-none focus:border-brand-700 shadow-xs cursor-pointer"
+                >
+                  <option value="popular">Popular & Top Rated</option>
+                  <option value="price-low">Price: Low to High</option>
+                  <option value="price-high">Price: High to Low</option>
+                  <option value="discount">Biggest Discount & Offers</option>
+                </select>
+              </div>
+
+            </div>
+          </div>
+
+          {/* Active Search / Filter Pill */}
+          {(searchQuery || selectedCategory !== 'All') && (
+            <div className="flex items-center gap-2 mb-6 bg-gold-50/80 border border-gold-300/60 p-2.5 rounded-2xl text-xs text-stone-700">
+              <span className="font-bold text-gold-900">Active Filter:</span>
+              {selectedCategory !== 'All' && (
+                <span className="bg-white px-2.5 py-0.5 rounded-lg border border-gold-200 font-semibold">
+                  Category: <strong>{selectedCategory}</strong>
+                </span>
+              )}
+              {searchQuery && (
+                <span className="bg-white px-2.5 py-0.5 rounded-lg border border-gold-200 font-semibold">
+                  Search: <strong>"{searchQuery}"</strong>
+                </span>
+              )}
+              <button
+                onClick={() => {
+                  setSelectedCategory('All');
+                  setSearchQuery('');
+                }}
+                className="ml-auto flex items-center gap-1 text-rose-700 hover:text-rose-900 font-bold hover:underline cursor-pointer"
+              >
+                <FilterX size={14} />
+                <span>Clear Filters</span>
+              </button>
+            </div>
+          )}
+
+          {/* Products Grid (Responsive Zara / H&M Catalog) */}
+          {filteredProducts.length === 0 ? (
+            <div className="bg-white rounded-3xl p-12 text-center border border-[#ebdcc7] shadow-sm space-y-4 my-6">
+              <div className="w-16 h-16 rounded-full bg-stone-100 flex items-center justify-center mx-auto text-stone-400">
+                <Search size={32} />
+              </div>
+              <h3 className="font-serif text-lg font-bold text-stone-800">
+                No Items Match Your Selection
+              </h3>
+              <p className="text-xs text-stone-500 max-w-sm mx-auto">
+                Try searching for different keywords, clear category filters, or explore all women's fashion items.
+              </p>
+              <button
+                onClick={() => {
+                  setSelectedCategory('All');
+                  setSearchQuery('');
+                }}
+                className="px-6 py-2.5 royal-maroon-bg text-gold-100 text-xs font-bold rounded-full shadow-md hover:opacity-95 transition-all cursor-pointer"
+              >
+                Show All Items
+              </button>
+            </div>
+          ) : (
+            <div className={
+              gridLayout === 'grid-2'
+                ? "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-6 sm:gap-8"
+                : "grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6"
+            }>
+              {filteredProducts.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  onAddToCart={handleAddToCart}
+                  onQuickView={setQuickViewProduct}
+                  settings={settings}
+                  isWishlisted={wishlist.includes(product.id)}
+                  onToggleWishlist={handleToggleWishlist}
+                />
+              ))}
+            </div>
+          )}
+
+        </section>
+
+        {/* Customer Social Proof & Verified Reviews */}
+        <CustomerReviews reviews={reviews} />
+
+      </main>
+
+      {/* Floating WhatsApp / Telegram Quick Action Button */}
+      <a
+        href={getDirectChannelLink(settings, "Hello Aura Ethnic! I would like to inquire about your Women Fashion Collection")}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`fixed bottom-6 right-6 z-40 text-white p-3.5 sm:px-5 sm:py-3.5 rounded-full shadow-2xl flex items-center gap-2 hover:scale-105 active:scale-95 transition-all duration-300 border-2 border-white group cursor-pointer ${
+          settings.orderChannel === 'telegram'
+            ? 'bg-sky-500 hover:bg-sky-600'
+            : 'bg-emerald-600 hover:bg-emerald-700'
+        }`}
+        title={`Chat Directly on ${settings.orderChannel === 'telegram' ? 'Telegram' : 'WhatsApp'}`}
+      >
+        {settings.orderChannel === 'telegram' ? (
+          <Send size={22} className="group-hover:translate-x-0.5 transition-transform" />
+        ) : (
+          <MessageCircle size={24} className="group-hover:animate-bounce" />
+        )}
+        <span className="hidden sm:inline font-bold text-xs tracking-wide">
+          {settings.orderChannel === 'telegram' ? 'Telegram Order' : 'WhatsApp Order'}
+        </span>
+      </a>
+
+      {/* Quick View Product Modal */}
+      {quickViewProduct && (
+        <ProductQuickView
+          product={quickViewProduct}
+          onClose={() => setQuickViewProduct(null)}
+          onAddToCart={handleAddToCart}
+          settings={settings}
+        />
+      )}
+
+      {/* Cart Drawer with Luxury Features */}
+      <CartDrawer
+        isOpen={isCartOpen}
+        onClose={() => setIsCartOpen(false)}
+        cartItems={cartItems}
+        onUpdateQuantity={handleUpdateQuantity}
+        onRemoveItem={handleRemoveItem}
+        onProceedToCheckout={(pricing) => {
+          setIsCartOpen(false);
+          setIsCheckoutOpen(true);
+        }}
+        appliedPromo={appliedPromo}
+        setAppliedPromo={setAppliedPromo}
+        coupons={coupons}
+        settings={settings}
+      />
+
+      {/* WhatsApp Checkout Modal */}
+      <WhatsAppCheckoutModal
+        isOpen={isCheckoutOpen}
+        onClose={() => setIsCheckoutOpen(false)}
+        cartItems={cartItems}
+        appliedPromo={appliedPromo}
+        settings={settings}
+        onOrderSuccess={() => {
+          setOrders(getStoredOrders());
+          handleClearCart();
+        }}
+      />
+
+      {/* Boutique Footer */}
+      <Footer
+        onOpenAdmin={handleOpenAdminPage}
+        settings={settings}
+        onSelectCategory={setSelectedCategory}
+        categories={categories}
+      />
+
+    </div>
+  );
+}
+
+export default App;
