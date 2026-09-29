@@ -24,7 +24,7 @@ export const Footer = ({ onOpenAdmin, settings = {}, onSelectCategory, categorie
                 <span className="font-heading text-lg sm:text-xl font-black tracking-wider text-stone-900 block leading-tight">
                   {settings.storeName || "RADHIKA KURTI COLLECTION"}
                 </span>
-                <span className="text-[10px] uppercase tracking-widest text-amber-800 font-extrabold">
+                <span className="text-[10px] uppercase tracking-widest text-[#700b1d] font-extrabold">
                   Luxury Design & Ethnic Fashion
                 </span>
               </div>

@@ -26,9 +26,9 @@
   background: #a16207;
 }
 
-/* Luxury Light Glass & Gold Gradient Classes */
+/* Luxury Gold & Royal Velvet Maroon Gradient Classes */
 .gold-gradient-text {
-  background: linear-gradient(135deg, #a16207 0%, #b45309 40%, #78350f 100%);
+  background: linear-gradient(135deg, #d4af37 0%, #f59e0b 50%, #b45309 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -37,10 +37,10 @@
   background: linear-gradient(135deg, #d4af37 0%, #ecd79c 50%, #b89130 100%);
 }
 
-/* Light Luxury Brand Accent (Warm Cashmere & Amber Gold) */
+/* Royal Velvet Maroon (Sabyasachi Luxury Brand Accent) */
 .royal-maroon-bg, .brand-header-bg {
-  background: linear-gradient(135deg, #92400e 0%, #b45309 50%, #78350f 100%);
-  border-color: rgba(217, 119, 6, 0.4);
+  background: linear-gradient(135deg, #700b1d 0%, #540614 50%, #38020a 100%);
+  border-color: rgba(212, 175, 55, 0.45);
 }
 
 .light-luxe-bg {

@@ -94,7 +94,7 @@ export const ProductQuickView = ({ product, onClose, onAddToCart, settings = {} 
                 </span>
               )}
               {product.offer && (
-                <div className="absolute bottom-0 inset-x-0 bg-gradient-to-r from-amber-700 via-amber-900 to-stone-900 text-gold-100 px-2.5 py-1 text-[11px] sm:text-xs font-bold flex items-center justify-center gap-1.5 shadow-md">
+                <div className="absolute bottom-0 inset-x-0 bg-gradient-to-r from-[#700b1d] via-[#4a040e] to-[#260107] text-gold-200 px-2.5 py-1 text-[11px] sm:text-xs font-bold flex items-center justify-center gap-1.5 shadow-md border-t border-gold-500/30">
                   <Sparkles size={13} className="text-gold-300 animate-spin" style={{ animationDuration: '4s' }} />
                   <span>{product.offer}</span>
                 </div>
@@ -109,7 +109,7 @@ export const ProductQuickView = ({ product, onClose, onAddToCart, settings = {} 
                     key={idx}
                     onClick={() => setSelectedImage(img)}
                     className={`w-12 sm:w-16 h-16 sm:h-20 rounded-lg overflow-hidden border-2 transition-all shrink-0 cursor-pointer ${
-                      selectedImage === img ? 'border-amber-800 scale-105 shadow-sm' : 'border-transparent opacity-70 hover:opacity-100'
+                      selectedImage === img ? 'border-[#700b1d] scale-105 shadow-sm' : 'border-transparent opacity-70 hover:opacity-100'
                     }`}
                   >
                     <img src={img} alt="" className="w-full h-full object-cover object-top" />
@@ -123,7 +123,7 @@ export const ProductQuickView = ({ product, onClose, onAddToCart, settings = {} 
           <div className="p-4 sm:p-6 md:p-8 flex flex-col justify-between space-y-4">
             <div>
               <div className="flex items-center justify-between text-xs text-stone-500 mb-1">
-                <span className="uppercase tracking-widest font-extrabold text-amber-800">
+                <span className="uppercase tracking-widest font-extrabold text-[#700b1d]">
                   {product.category}
                 </span>
                 <div className="flex items-center gap-1 text-amber-500 font-semibold">

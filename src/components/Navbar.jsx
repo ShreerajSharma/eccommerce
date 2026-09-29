@@ -148,7 +148,7 @@ export const Navbar = ({
                 <span className="font-heading text-xs xs:text-sm sm:text-xl font-black tracking-wider sm:tracking-widest text-stone-900 leading-tight truncate">
                   {settings.storeName || "RADHIKA KURTI COLLECTION"}
                 </span>
-                <span className="text-[8px] sm:text-[10px] tracking-[0.2em] text-amber-800 uppercase font-extrabold truncate hidden xs:inline">
+                <span className="text-[8px] sm:text-[10px] tracking-[0.2em] text-[#700b1d] uppercase font-extrabold truncate hidden xs:inline">
                   LUXURY DESIGN • ETHNIC FASHION
                 </span>
               </div>
@@ -313,16 +313,16 @@ export const Navbar = ({
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={onOpenCart}
-              className="relative flex items-center gap-1.5 px-2.5 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-amber-700 via-amber-800 to-stone-900 text-white rounded-full hover:opacity-95 transition-all shadow-md group cursor-pointer"
+              className="relative flex items-center gap-1.5 px-2.5 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-[#700b1d] via-[#540614] to-[#38020a] hover:from-[#850e24] hover:to-[#4a040e] text-gold-100 border border-gold-400/40 rounded-full transition-all shadow-md shadow-rose-950/20 group cursor-pointer"
               aria-label="View Shopping Cart"
             >
-              <ShoppingBag size={17} className="text-amber-200 group-hover:scale-110 transition-transform" />
+              <ShoppingBag size={17} className="text-gold-300 group-hover:scale-110 transition-transform" />
               <span className="hidden sm:inline font-bold text-xs tracking-wide">Cart</span>
               <motion.span 
                 key={cartCount}
                 initial={{ scale: 0.6 }}
                 animate={{ scale: 1 }}
-                className="w-4.5 h-4.5 bg-amber-400 text-stone-950 text-[10px] font-black rounded-full flex items-center justify-center shadow-xs"
+                className="w-4.5 h-4.5 bg-gradient-to-br from-amber-300 to-amber-500 text-stone-950 text-[10px] font-black rounded-full flex items-center justify-center shadow-xs"
               >
                 {cartCount}
               </motion.span>
@@ -369,13 +369,13 @@ export const Navbar = ({
               }}
               className={`py-1 transition-colors relative cursor-pointer ${
                 selectedCategory === catName 
-                  ? 'text-amber-950 font-black' 
-                  : 'text-stone-600 hover:text-amber-900'
+                  ? 'text-[#700b1d] font-black' 
+                  : 'text-stone-600 hover:text-[#700b1d]'
               }`}
             >
               <span>{catName}</span>
               {selectedCategory === catName && (
-                <span className="absolute -bottom-2 left-0 right-0 h-0.5 bg-amber-700 rounded-full"></span>
+                <span className="absolute -bottom-2 left-0 right-0 h-0.5 bg-[#700b1d] rounded-full"></span>
               )}
             </button>
           ))}

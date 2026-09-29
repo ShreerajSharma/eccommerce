@@ -88,7 +88,7 @@ export const ProductCard = ({
 
         {/* Special Offer Ribbon Strip with Shimmer */}
         {product.offer && (
-          <div className="absolute bottom-0 inset-x-0 bg-gradient-to-r from-amber-700 via-amber-900 to-stone-900 text-gold-100 px-3 py-1 text-[11px] font-bold flex items-center justify-center gap-1.5 shadow-md z-10">
+          <div className="absolute bottom-0 inset-x-0 bg-gradient-to-r from-[#700b1d] via-[#4a040e] to-[#260107] text-gold-200 px-3 py-1 text-[11px] font-bold flex items-center justify-center gap-1.5 shadow-md z-10 border-t border-gold-500/30">
             <Sparkles size={12} className="text-gold-300 animate-pulse" />
             <span className="line-clamp-1">{product.offer}</span>
           </div>
@@ -131,7 +131,7 @@ export const ProductCard = ({
         <div>
           {/* Category & Rating */}
           <div className="flex items-center justify-between text-xs text-stone-500 mb-1">
-            <span className="uppercase tracking-widest font-bold text-[9px] sm:text-[10px] text-amber-800 truncate max-w-[60%]">
+            <span className="uppercase tracking-widest font-bold text-[9px] sm:text-[10px] text-[#700b1d] truncate max-w-[60%]">
               {product.category}
             </span>
             <div className="flex items-center gap-1 text-amber-500 font-semibold text-[11px] sm:text-xs shrink-0">

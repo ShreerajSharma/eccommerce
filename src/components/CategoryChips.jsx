@@ -47,8 +47,8 @@ export const CategoryChips = ({ categories, selectedCategory, onSelectCategory, 
               onClick={() => onSelectCategory(cat.name)}
               className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-semibold whitespace-nowrap transition-all duration-300 border shadow-xs cursor-pointer ${
                 isSelected
-                  ? 'royal-maroon-bg text-gold-200 border-amber-800 shadow-md scale-105'
-                  : 'bg-white/95 text-stone-700 border-[#ebdcc7] hover:border-amber-400 hover:bg-amber-50/50'
+                  ? 'royal-maroon-bg text-gold-100 border-gold-400/50 shadow-md scale-105'
+                  : 'bg-white/95 text-stone-700 border-[#ebdcc7] hover:border-[#700b1d]/40 hover:bg-rose-50/40'
               }`}
             >
               <span className="text-sm">{cat.icon || '👗'}</span>

@@ -68,10 +68,10 @@ export const HeroBanner = ({ onExploreClick, settings }) => {
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.96 }}
                 onClick={onExploreClick}
-                className="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-amber-700 via-amber-800 to-stone-900 text-white font-extrabold text-sm sm:text-base rounded-full shadow-lg hover:shadow-amber-900/20 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer group"
+                className="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-[#700b1d] via-[#540614] to-[#38020a] hover:from-[#850e24] hover:to-[#4a040e] text-gold-100 font-extrabold text-sm sm:text-base rounded-full shadow-lg shadow-rose-950/25 border border-gold-400/40 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer group"
               >
                 <span>Shop Collection</span>
-                <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                <ArrowRight size={18} className="text-gold-300 group-hover:translate-x-1 transition-transform" />
               </motion.button>
 
               <motion.a
@@ -94,7 +94,7 @@ export const HeroBanner = ({ onExploreClick, settings }) => {
             </div>
 
             {/* Tagline */}
-            <div className="pt-2 text-xs text-amber-950/80 font-bold tracking-wide">
+            <div className="pt-2 text-xs text-[#700b1d] font-bold tracking-wide">
               ⚡ Instant {channelLabel} Confirmation • Pan-India Free Delivery • 7-Day Easy Exchange
             </div>
           </motion.div>
@@ -124,7 +124,7 @@ export const HeroBanner = ({ onExploreClick, settings }) => {
                 <motion.div 
                   animate={{ y: [0, -4, 0] }}
                   transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-                  className="absolute top-3.5 right-3.5 bg-amber-700 text-white px-3 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-wider shadow-lg border border-amber-500"
+                  className="absolute top-3.5 right-3.5 bg-gradient-to-r from-[#700b1d] to-[#4a040e] text-gold-100 px-3 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-wider shadow-lg border border-gold-400/50"
                 >
                   Up To 50% OFF
                 </motion.div>
@@ -132,10 +132,10 @@ export const HeroBanner = ({ onExploreClick, settings }) => {
                 {/* Floating Bottom Card */}
                 <div className="absolute bottom-3 left-3 right-3 bg-white/95 backdrop-blur-md p-3.5 rounded-2xl border border-[#ebdcc7] shadow-lg flex items-center justify-between">
                   <div>
-                    <p className="text-[10px] text-amber-800 font-extrabold uppercase tracking-widest">Trending Now</p>
+                    <p className="text-[10px] text-[#700b1d] font-extrabold uppercase tracking-widest">Trending Now</p>
                     <p className="text-sm font-extrabold text-stone-900">Chanderi Zari Anarkalis</p>
                   </div>
-                  <span className="text-xs font-extrabold bg-amber-100 text-amber-900 px-3 py-1 rounded-full border border-amber-300">
+                  <span className="text-xs font-extrabold bg-rose-50 text-[#700b1d] px-3 py-1 rounded-full border border-rose-200">
                     From ₹999
                   </span>
                 </div>
@@ -150,11 +150,11 @@ export const HeroBanner = ({ onExploreClick, settings }) => {
       <div className="container mx-auto px-4 mt-6">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
           <motion.div 
-            whileHover={{ y: -4, borderColor: '#d97706' }}
+            whileHover={{ y: -4, borderColor: '#700b1d' }}
             transition={{ duration: 0.2 }}
             className="bg-white border border-[#e8d5be] p-4 rounded-2xl flex items-center gap-3.5 shadow-xs transition-colors"
           >
-            <div className="w-11 h-11 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-800 shrink-0 shadow-inner">
+            <div className="w-11 h-11 rounded-2xl bg-rose-50 border border-rose-200 flex items-center justify-center text-[#700b1d] shrink-0 shadow-inner">
               <ShieldCheck size={22} />
             </div>
             <div>

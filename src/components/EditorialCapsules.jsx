@@ -45,7 +45,7 @@ export const EditorialCapsules = ({ onSelectCategory }) => {
           transition={{ duration: 0.6 }}
           className="text-center space-y-2 max-w-xl mx-auto"
         >
-          <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-amber-700 block">
+          <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-[#700b1d] block">
             LIMITED EDITION CAPSULES
           </span>
           <h2 className="font-heading text-2xl sm:text-3xl font-bold tracking-tight text-stone-900">
