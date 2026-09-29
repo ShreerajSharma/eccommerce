@@ -570,12 +570,12 @@ export const AdminPage = ({
         {/* Top Header Strip */}
         <header className="p-4 sm:p-6 flex items-center justify-between border-b border-stone-800/80 backdrop-blur-md z-10">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full royal-maroon-bg flex items-center justify-center border border-gold-400/80 shadow-md">
-              <Crown className="text-gold-300" size={20} />
+            <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center border-2 border-amber-400 shadow-md bg-[#0a1b24]">
+              <img src="/logo.png" alt="Radhika Kurti Collection" className="w-full h-full object-cover" />
             </div>
             <div>
               <span className="font-heading text-lg sm:text-xl font-bold tracking-widest text-gold-300">
-                {settings.storeName || "AURA ETHNIC BOUTIQUE"}
+                {settings.storeName || "RADHIKA KURTI COLLECTION"}
               </span>
               <p className="text-[10px] text-stone-400 tracking-wider uppercase">Executive Portal</p>
             </div>
@@ -717,13 +717,13 @@ export const AdminPage = ({
           
           {/* Logo & Info */}
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gold-400/20 border border-gold-400/50 flex items-center justify-center text-gold-300 shadow-inner">
-              <Crown size={22} />
+            <div className="w-11 h-11 rounded-full overflow-hidden flex items-center justify-center border-2 border-amber-400 shadow-md bg-[#0a1b24] shrink-0">
+              <img src="/logo.png" alt="Radhika Kurti Collection" className="w-full h-full object-cover" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="font-heading text-lg sm:text-xl font-bold tracking-widest text-gold-200">
-                  {settings.storeName || "AURA ETHNIC"} ADMIN SUITE
+                <h1 className="font-heading text-base sm:text-xl font-black tracking-widest text-gold-200">
+                  {settings.storeName || "RADHIKA KURTI COLLECTION"} ADMIN
                 </h1>
                 <span className="bg-emerald-600 text-white text-[10px] font-extrabold px-2.5 py-0.5 rounded-full shadow-sm">
                   PAWAN420 Active

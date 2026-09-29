@@ -136,17 +136,20 @@ export const Navbar = ({
             </button>
 
             {/* Boutique Brand Logo */}
-            <a href="#" className="flex items-center gap-2 min-w-0 overflow-hidden">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-tr from-amber-700 to-amber-600 flex items-center justify-center shadow-md border border-amber-300 text-white shrink-0">
-                <Crown size={18} className="sm:hidden" />
-                <Crown size={20} className="hidden sm:inline" />
+            <a href="#" className="flex items-center gap-2 sm:gap-2.5 min-w-0 overflow-hidden group">
+              <div className="w-8 h-8 sm:w-11 sm:h-11 rounded-full overflow-hidden flex items-center justify-center shadow-md border-2 border-amber-400 shrink-0 bg-[#0a1b24] group-hover:scale-105 transition-transform">
+                <img 
+                  src="/logo.png" 
+                  alt={settings.storeName || "RADHIKA KURTI COLLECTION"} 
+                  className="w-full h-full object-cover" 
+                />
               </div>
               <div className="flex flex-col min-w-0">
-                <span className="font-heading text-sm xs:text-base sm:text-2xl font-extrabold tracking-wider sm:tracking-widest text-stone-900 leading-tight truncate">
-                  {settings.storeName || "AURA ETHNIC"}
+                <span className="font-heading text-xs xs:text-sm sm:text-xl font-black tracking-wider sm:tracking-widest text-stone-900 leading-tight truncate">
+                  {settings.storeName || "RADHIKA KURTI COLLECTION"}
                 </span>
-                <span className="text-[9px] sm:text-[11px] tracking-wider sm:tracking-widest text-amber-800 uppercase font-extrabold truncate hidden xs:inline">
-                  Women's Luxury Fashion & Kurtis
+                <span className="text-[8px] sm:text-[10px] tracking-[0.2em] text-amber-800 uppercase font-extrabold truncate hidden xs:inline">
+                  LUXURY DESIGN • ETHNIC FASHION
                 </span>
               </div>
             </a>

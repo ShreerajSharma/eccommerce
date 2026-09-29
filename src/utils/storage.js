@@ -4,7 +4,7 @@ import { INITIAL_COUPONS, INITIAL_REVIEWS } from '../data/initialCoupons';
 
 const PRODUCTS_KEY = 'aura_kurti_products_v3';
 const CATEGORIES_KEY = 'aura_kurti_categories_v3';
-const SETTINGS_KEY = 'aura_kurti_settings_v3';
+const SETTINGS_KEY = 'aura_kurti_settings_v4';
 const ORDERS_KEY = 'aura_kurti_orders_v3';
 const ADMIN_AUTH_KEY = 'aura_kurti_admin_auth_v3';
 const COUPONS_KEY = 'aura_kurti_coupons_v3';

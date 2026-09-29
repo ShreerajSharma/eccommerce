@@ -17,15 +17,15 @@ export const Footer = ({ onOpenAdmin, settings = {}, onSelectCategory, categorie
           {/* Brand Info */}
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-amber-700 to-amber-600 flex items-center justify-center shadow-md border border-amber-300 text-white">
-                <Crown size={20} />
+              <div className="w-11 h-11 rounded-full overflow-hidden flex items-center justify-center shadow-md border-2 border-amber-400 shrink-0 bg-[#0a1b24]">
+                <img src="/logo.png" alt={settings.storeName || "RADHIKA KURTI COLLECTION"} className="w-full h-full object-cover" />
               </div>
               <div>
-                <span className="font-heading text-xl font-extrabold tracking-widest text-stone-900 block leading-tight">
-                  {settings.storeName || "AURA ETHNIC"}
+                <span className="font-heading text-lg sm:text-xl font-black tracking-wider text-stone-900 block leading-tight">
+                  {settings.storeName || "RADHIKA KURTI COLLECTION"}
                 </span>
-                <span className="text-[10px] uppercase tracking-widest text-amber-800 font-bold">
-                  Haute Couture & Handcrafted Kurtis
+                <span className="text-[10px] uppercase tracking-widest text-amber-800 font-extrabold">
+                  Luxury Design & Ethnic Fashion
                 </span>
               </div>
             </div>

@@ -8,7 +8,7 @@ export const cleanWhatsAppPhone = (phone = "") => {
 };
 
 export const cleanTelegramHandle = (handle = "") => {
-  if (!handle) return "auraethnicboutique";
+  if (!handle) return "radhikakurticollection";
   let cleaned = handle.trim();
   // Remove full url prefix if user entered https://t.me/username
   cleaned = cleaned.replace(/^https?:\/\/(www\.)?t\.me\//i, '');
@@ -17,7 +17,7 @@ export const cleanTelegramHandle = (handle = "") => {
   cleaned = cleaned.replace(/^@/, '');
   // Remove trailing slashes or queries
   cleaned = cleaned.split('/')[0].split('?')[0];
-  return cleaned || "auraethnicboutique";
+  return cleaned || "radhikakurticollection";
 };
 
 /**
@@ -29,7 +29,7 @@ export const buildOrderMessage = ({ customer, cartItems, totalPrice, settings, d
     return `${idx + 1}. 👗 *${item.name}*\n   • Size: ${item.selectedSize || 'Standard'}\n   • Qty: ${item.quantity}\n   • Price: ₹${item.price.toLocaleString('en-IN')} (₹${itemTotal.toLocaleString('en-IN')})\n   • Photo: ${item.image}`;
   }).join('\n\n');
 
-  return `✨ *NEW BOUTIQUE ORDER - ${settings.storeName || 'AURA ETHNIC'}* ✨
+  return `✨ *NEW BOUTIQUE ORDER - ${settings.storeName || 'RADHIKA KURTI COLLECTION'}* ✨
 ━━━━━━━━━━━━━━━━━━━━
 👤 *CUSTOMER DETAILS*
 • Name: ${customer.name || 'Not provided'}
@@ -56,7 +56,7 @@ ${discount > 0 ? `• Discount Applied: -₹${discount.toLocaleString('en-IN')}\
  * Builds single product inquiry message
  */
 export const buildSingleProductMessage = ({ product, selectedSize, settings }) => {
-  return `✨ *INQUIRY / DIRECT ORDER - ${settings.storeName || 'AURA ETHNIC'}* ✨
+  return `✨ *INQUIRY / DIRECT ORDER - ${settings.storeName || 'RADHIKA KURTI COLLECTION'}* ✨
 ━━━━━━━━━━━━━━━━━━━━
 Hello! I would like to order this item:
 

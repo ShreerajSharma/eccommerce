@@ -8,7 +8,7 @@ export const HeroBanner = ({ onExploreClick, settings }) => {
   const channelLabel = isTelegram ? 'Telegram' : 'WhatsApp';
   const directCatalogUrl = getDirectChannelLink(
     settings,
-    `Hello ${settings.storeName || 'Aura Ethnic'}! I would like to see your latest festive Kurti & ethnic collection catalog.`
+    `Hello ${settings.storeName || 'Radhika Kurti Collection'}! I would like to see your latest festive Kurti & ethnic collection catalog.`
   );
 
   return (
