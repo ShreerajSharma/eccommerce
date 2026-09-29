@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   X, 
   Star, 
@@ -11,9 +12,9 @@ import {
   Ruler, 
   Check, 
   Plus, 
-  Minus,
-  Tag,
-  Send
+  Minus, 
+  Tag, 
+  Send 
 } from 'lucide-react';
 import { generateSingleProductChannelUrl } from '../utils/whatsapp';
 
@@ -49,15 +50,25 @@ export const ProductQuickView = ({ product, onClose, onAddToCart, settings = {} 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 md:p-6 bg-stone-950/70 backdrop-blur-sm overflow-y-auto animate-fade-in">
-      <div 
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 md:p-6 bg-stone-950/70 backdrop-blur-sm overflow-y-auto"
+      onClick={onClose}
+    >
+      <motion.div 
+        initial={{ scale: 0.92, opacity: 0, y: 20 }}
+        animate={{ scale: 1, opacity: 1, y: 0 }}
+        exit={{ scale: 0.92, opacity: 0, y: 20 }}
+        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
         className="relative w-full max-w-4xl bg-[#fdfcf9] rounded-3xl shadow-2xl border border-gold-300/60 overflow-hidden my-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-white/90 text-stone-700 hover:bg-brand-900 hover:text-white shadow-md flex items-center justify-center transition-all"
+          className="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-white/90 text-stone-700 hover:bg-stone-900 hover:text-white shadow-md flex items-center justify-center transition-all cursor-pointer"
         >
           <X size={20} />
         </button>
@@ -68,7 +79,11 @@ export const ProductQuickView = ({ product, onClose, onAddToCart, settings = {} 
           <div className="p-3 sm:p-5 md:p-6 bg-[#faf5ed] flex flex-col justify-between">
             {/* Main Active Image */}
             <div className="relative aspect-[3/4] max-h-72 sm:max-h-96 md:max-h-none w-full rounded-2xl overflow-hidden border border-gold-300/50 shadow-md mx-auto">
-              <img
+              <motion.img
+                key={selectedImage || product.image}
+                initial={{ opacity: 0.7 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.3 }}
                 src={selectedImage || product.image}
                 alt={product.name}
                 className="w-full h-full object-cover object-top"
@@ -79,7 +94,7 @@ export const ProductQuickView = ({ product, onClose, onAddToCart, settings = {} 
                 </span>
               )}
               {product.offer && (
-                <div className="absolute bottom-0 inset-x-0 bg-gradient-to-r from-amber-600 via-brand-900 to-amber-700 text-gold-100 px-2.5 py-1 text-[11px] sm:text-xs font-bold flex items-center justify-center gap-1.5 shadow-md">
+                <div className="absolute bottom-0 inset-x-0 bg-gradient-to-r from-amber-700 via-amber-900 to-stone-900 text-gold-100 px-2.5 py-1 text-[11px] sm:text-xs font-bold flex items-center justify-center gap-1.5 shadow-md">
                   <Sparkles size={13} className="text-gold-300 animate-spin" style={{ animationDuration: '4s' }} />
                   <span>{product.offer}</span>
                 </div>
@@ -93,8 +108,8 @@ export const ProductQuickView = ({ product, onClose, onAddToCart, settings = {} 
                   <button
                     key={idx}
                     onClick={() => setSelectedImage(img)}
-                    className={`w-12 sm:w-16 h-16 sm:h-20 rounded-lg overflow-hidden border-2 transition-all shrink-0 ${
-                      selectedImage === img ? 'border-brand-900 scale-105 shadow-sm' : 'border-transparent opacity-70'
+                    className={`w-12 sm:w-16 h-16 sm:h-20 rounded-lg overflow-hidden border-2 transition-all shrink-0 cursor-pointer ${
+                      selectedImage === img ? 'border-amber-800 scale-105 shadow-sm' : 'border-transparent opacity-70 hover:opacity-100'
                     }`}
                   >
                     <img src={img} alt="" className="w-full h-full object-cover object-top" />
@@ -104,97 +119,80 @@ export const ProductQuickView = ({ product, onClose, onAddToCart, settings = {} 
             )}
           </div>
 
-          {/* Right Column: Product Info & Actions */}
-          <div className="p-4 sm:p-6 md:p-8 flex flex-col justify-between space-y-4 sm:space-y-5">
+          {/* Right Column: Details & Ordering */}
+          <div className="p-4 sm:p-6 md:p-8 flex flex-col justify-between space-y-4">
             <div>
-              {/* Category & Rating */}
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] sm:text-xs uppercase font-bold tracking-widest text-gold-700 bg-gold-100/80 px-2.5 py-1 rounded-full">
+              <div className="flex items-center justify-between text-xs text-stone-500 mb-1">
+                <span className="uppercase tracking-widest font-extrabold text-amber-800">
                   {product.category}
                 </span>
-                <div className="flex items-center gap-1 text-amber-500 font-bold text-xs sm:text-sm">
-                  <Star size={16} fill="currentColor" />
-                  <span>{product.rating || 4.8}</span>
-                  <span className="text-stone-400 font-normal text-xs">({product.reviewsCount || 45} Verified Ratings)</span>
+                <div className="flex items-center gap-1 text-amber-500 font-semibold">
+                  <Star size={14} fill="currentColor" />
+                  <span>{product.rating || 4.9}</span>
+                  <span className="text-stone-400">({product.reviewsCount || 42} reviews)</span>
                 </div>
               </div>
 
-              {/* Title */}
-              <h2 className="font-serif text-xl sm:text-2xl font-bold text-stone-900 mt-2">
+              <h2 className="font-heading text-lg sm:text-2xl font-bold text-stone-900">
                 {product.name}
               </h2>
 
-              {/* Offer Banner if present */}
-              {product.offer && (
-                <div className="mt-2.5 inline-flex items-center gap-1.5 px-3 py-1 bg-amber-50 border border-amber-300 text-amber-900 text-xs font-bold rounded-lg">
-                  <Tag size={13} className="text-amber-700" />
-                  <span>Exclusive Offer: {product.offer}</span>
-                </div>
-              )}
-
-              {/* Price & Savings */}
-              <div className="flex items-baseline gap-3 mt-3">
-                <span className="text-2xl sm:text-3xl font-extrabold text-brand-950">
+              {/* Pricing */}
+              <div className="flex items-baseline gap-3 mt-3 flex-wrap">
+                <span className="font-heading text-2xl sm:text-3xl font-extrabold text-stone-900">
                   ₹{product.price.toLocaleString('en-IN')}
                 </span>
                 {product.originalPrice && product.originalPrice > product.price && (
-                  <>
-                    <span className="text-sm sm:text-base text-stone-400 line-through">
-                      ₹{product.originalPrice.toLocaleString('en-IN')}
-                    </span>
-                    <span className="bg-emerald-100 text-emerald-800 text-xs font-bold px-2 py-0.5 rounded-full">
-                      {discountPercent}% OFF (Save ₹{savingsAmount.toLocaleString('en-IN')})
-                    </span>
-                  </>
+                  <span className="text-sm text-stone-400 line-through">
+                    ₹{product.originalPrice.toLocaleString('en-IN')}
+                  </span>
+                )}
+                {discountPercent > 0 && (
+                  <span className="bg-emerald-100 text-emerald-800 text-xs font-extrabold px-2.5 py-1 rounded-full">
+                    {discountPercent}% OFF (Save ₹{savingsAmount.toLocaleString('en-IN')})
+                  </span>
                 )}
               </div>
 
-              <p className="text-xs text-stone-500 mt-1">
-                Inclusive of all taxes • Express 2-4 day shipping across India
-              </p>
-
               {/* Size Selector */}
-              <div className="mt-5 pt-4 border-t border-stone-200">
+              <div className="mt-5">
                 <div className="flex items-center justify-between mb-2">
-                  <label className="text-xs uppercase font-bold tracking-wider text-stone-700">
-                    Select Size
-                  </label>
-                  <button
+                  <span className="text-xs uppercase font-bold tracking-wider text-stone-700">
+                    Select Size: <strong className="text-amber-900">{selectedSize}</strong>
+                  </span>
+                  <button 
                     onClick={() => setShowSizeGuide(!showSizeGuide)}
-                    className="text-xs text-brand-900 font-semibold flex items-center gap-1 hover:underline"
+                    className="text-xs text-amber-900 hover:underline font-bold flex items-center gap-1 cursor-pointer"
                   >
                     <Ruler size={13} />
-                    <span>{showSizeGuide ? 'Hide Size Chart' : 'Size Chart'}</span>
+                    <span>Size Guide</span>
                   </button>
                 </div>
 
-                {/* Size Options */}
-                <div className="flex gap-2 flex-wrap">
-                  {(product.sizes || ["XS", "S", "M", "L", "XL", "XXL", "3XL", "Free Size"]).map((size) => (
+                <div className="flex flex-wrap gap-2">
+                  {(product.sizes || ['S', 'M', 'L', 'XL']).map((sz) => (
                     <button
-                      key={size}
-                      onClick={() => setSelectedSize(size)}
-                      className={`px-3 py-2 text-xs font-bold rounded-xl border transition-all ${
-                        selectedSize === size
-                          ? 'royal-maroon-bg text-gold-100 border-brand-950 shadow-md scale-105'
-                          : 'bg-white text-stone-700 border-stone-300 hover:border-brand-700'
+                      key={sz}
+                      onClick={() => setSelectedSize(sz)}
+                      className={`min-w-10 h-10 px-3 rounded-xl font-bold text-xs transition-all flex items-center justify-center cursor-pointer ${
+                        selectedSize === sz
+                          ? 'royal-maroon-bg text-gold-100 shadow-md scale-105'
+                          : 'bg-stone-100 text-stone-700 hover:bg-stone-200'
                       }`}
                     >
-                      {size}
+                      {sz}
                     </button>
                   ))}
                 </div>
 
-                {/* Size Guide Table */}
                 {showSizeGuide && (
-                  <div className="mt-3 p-3 bg-amber-50/60 rounded-xl border border-amber-200 text-xs animate-fadeIn">
-                    <p className="font-bold text-amber-900 mb-1">Standard Size Chart (Inches):</p>
-                    <div className="grid grid-cols-4 gap-1 text-[11px] text-stone-700 text-center">
-                      <div className="font-bold bg-amber-100/80 p-1 rounded">Size</div>
-                      <div className="font-bold bg-amber-100/80 p-1 rounded">Bust</div>
-                      <div className="font-bold bg-amber-100/80 p-1 rounded">Waist</div>
-                      <div className="font-bold bg-amber-100/80 p-1 rounded">Hip</div>
-                      
+                  <div className="mt-3 p-3 bg-amber-50 rounded-xl border border-amber-200 text-[11px] text-stone-700 space-y-1">
+                    <p className="font-bold text-amber-950">Standard Women Size Chart (Inches):</p>
+                    <div className="grid grid-cols-4 gap-1 text-center font-mono">
+                      <div className="font-bold bg-amber-100/70 p-1">Size</div>
+                      <div className="font-bold bg-amber-100/70 p-1">Bust</div>
+                      <div className="font-bold bg-amber-100/70 p-1">Waist</div>
+                      <div className="font-bold bg-amber-100/70 p-1">Hip</div>
                       <div className="p-1">S</div><div className="p-1">36"</div><div className="p-1">32"</div><div className="p-1">38"</div>
                       <div className="p-1">M</div><div className="p-1">38"</div><div className="p-1">34"</div><div className="p-1">40"</div>
                       <div className="p-1">L</div><div className="p-1">40"</div><div className="p-1">36"</div><div className="p-1">42"</div>
@@ -208,17 +206,17 @@ export const ProductQuickView = ({ product, onClose, onAddToCart, settings = {} 
               {/* Quantity Selector */}
               <div className="mt-4 flex items-center gap-4">
                 <span className="text-xs uppercase font-bold tracking-wider text-stone-700">Quantity:</span>
-                <div className="flex items-center border border-stone-300 rounded-xl bg-white overflow-hidden shadow-sm">
+                <div className="flex items-center border border-stone-300 rounded-xl bg-white overflow-hidden shadow-xs">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="p-2 text-stone-600 hover:bg-stone-100 transition-colors"
+                    className="p-2 text-stone-600 hover:bg-stone-100 transition-colors cursor-pointer"
                   >
                     <Minus size={14} />
                   </button>
                   <span className="px-4 text-xs font-bold text-stone-800">{quantity}</span>
                   <button
                     onClick={() => setQuantity(quantity + 1)}
-                    className="p-2 text-stone-600 hover:bg-stone-100 transition-colors"
+                    className="p-2 text-stone-600 hover:bg-stone-100 transition-colors cursor-pointer"
                   >
                     <Plus size={14} />
                   </button>
@@ -248,10 +246,11 @@ export const ProductQuickView = ({ product, onClose, onAddToCart, settings = {} 
             <div className="space-y-2.5 pt-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {/* Add to Cart */}
-                <button
+                <motion.button
+                  whileTap={{ scale: 0.96 }}
                   onClick={handleAddToCart}
                   disabled={!product.inStock}
-                  className={`w-full py-3.5 px-4 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-md active:scale-95 ${
+                  className={`w-full py-3.5 px-4 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer ${
                     isAdded
                       ? 'bg-emerald-600 text-white'
                       : 'royal-maroon-bg text-gold-100 hover:opacity-95'
@@ -268,13 +267,14 @@ export const ProductQuickView = ({ product, onClose, onAddToCart, settings = {} 
                       <span>Add to Bag (₹{(product.price * quantity).toLocaleString('en-IN')})</span>
                     </>
                   )}
-                </button>
+                </motion.button>
 
                 {/* Direct WhatsApp / Telegram Buy */}
-                <button
+                <motion.button
+                  whileTap={{ scale: 0.96 }}
                   onClick={handleChannelOrder}
                   disabled={!product.inStock}
-                  className={`w-full py-3.5 px-4 rounded-xl font-bold text-xs sm:text-sm text-white flex items-center justify-center gap-2 transition-all shadow-md active:scale-95 ${
+                  className={`w-full py-3.5 px-4 rounded-xl font-bold text-xs sm:text-sm text-white flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer ${
                     isTelegram 
                       ? 'bg-sky-500 hover:bg-sky-600' 
                       : 'bg-emerald-600 hover:bg-emerald-700'
@@ -282,13 +282,13 @@ export const ProductQuickView = ({ product, onClose, onAddToCart, settings = {} 
                 >
                   {isTelegram ? <Send size={16} /> : <MessageCircle size={18} />}
                   <span>Order on {channelLabel}</span>
-                </button>
+                </motion.button>
               </div>
 
               {/* Trust Badges */}
               <div className="grid grid-cols-3 gap-2 pt-2 text-[10px] text-stone-500 text-center font-medium">
                 <div className="flex items-center justify-center gap-1">
-                  <ShieldCheck size={13} className="text-brand-800" />
+                  <ShieldCheck size={13} className="text-amber-800" />
                   <span>100% Original</span>
                 </div>
                 <div className="flex items-center justify-center gap-1">
@@ -305,7 +305,7 @@ export const ProductQuickView = ({ product, onClose, onAddToCart, settings = {} 
           </div>
 
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };

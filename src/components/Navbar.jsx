@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { 
   ShoppingBag, 
   Search, 
@@ -346,17 +347,24 @@ export const Navbar = ({
             </button>
 
             {/* Cart Button */}
-            <button
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={onOpenCart}
-              className="relative flex items-center gap-1.5 px-2.5 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-amber-700 via-amber-800 to-stone-900 text-white rounded-full hover:opacity-95 transition-all shadow-md active:scale-95 group cursor-pointer"
+              className="relative flex items-center gap-1.5 px-2.5 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-amber-700 via-amber-800 to-stone-900 text-white rounded-full hover:opacity-95 transition-all shadow-md group cursor-pointer"
               aria-label="View Shopping Cart"
             >
               <ShoppingBag size={17} className="text-amber-200 group-hover:scale-110 transition-transform" />
               <span className="hidden sm:inline font-bold text-xs tracking-wide">Cart</span>
-              <span className="w-4.5 h-4.5 bg-amber-400 text-stone-950 text-[10px] font-black rounded-full flex items-center justify-center shadow-xs">
+              <motion.span 
+                key={cartCount}
+                initial={{ scale: 0.6 }}
+                animate={{ scale: 1 }}
+                className="w-4.5 h-4.5 bg-amber-400 text-stone-950 text-[10px] font-black rounded-full flex items-center justify-center shadow-xs"
+              >
                 {cartCount}
-              </span>
-            </button>
+              </motion.span>
+            </motion.button>
           </div>
         </div>
 

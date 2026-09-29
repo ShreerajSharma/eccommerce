@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { Sparkles } from 'lucide-react';
 
 export const CategoryChips = ({ categories, selectedCategory, onSelectCategory, products }) => {
@@ -24,7 +25,7 @@ export const CategoryChips = ({ categories, selectedCategory, onSelectCategory, 
       {/* Category Section Header */}
       <div className="flex items-center justify-between mb-3">
         <h2 className="text-xs uppercase tracking-widest font-bold text-stone-600 flex items-center gap-1.5">
-          <Sparkles size={14} className="text-gold-500" />
+          <Sparkles size={14} className="text-amber-600" />
           <span>Women's Fashion Collections</span>
         </h2>
         <span className="text-xs text-stone-500 font-medium">
@@ -39,23 +40,25 @@ export const CategoryChips = ({ categories, selectedCategory, onSelectCategory, 
           const count = getProductCount(cat.name);
 
           return (
-            <button
+            <motion.button
               key={cat.id || cat.name}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => onSelectCategory(cat.name)}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-semibold whitespace-nowrap transition-all duration-300 border shadow-sm ${
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-semibold whitespace-nowrap transition-all duration-300 border shadow-xs cursor-pointer ${
                 isSelected
-                  ? 'royal-maroon-bg text-gold-200 border-brand-950 shadow-md scale-105'
-                  : 'bg-white/95 text-stone-700 border-[#ebdcc7] hover:border-gold-400 hover:bg-gold-50/50'
+                  ? 'royal-maroon-bg text-gold-200 border-amber-800 shadow-md scale-105'
+                  : 'bg-white/95 text-stone-700 border-[#ebdcc7] hover:border-amber-400 hover:bg-amber-50/50'
               }`}
             >
               <span className="text-sm">{cat.icon || '👗'}</span>
               <span>{cat.name}</span>
               <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-                isSelected ? 'bg-gold-400 text-brand-950' : 'bg-stone-100 text-stone-600'
+                isSelected ? 'bg-gold-400 text-stone-900' : 'bg-stone-100 text-stone-600'
               }`}>
                 {count}
               </span>
-            </button>
+            </motion.button>
           );
         })}
       </div>

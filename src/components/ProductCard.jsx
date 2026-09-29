@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { ShoppingBag, Eye, Star, MessageCircle, Check, Sparkles, Heart, Zap, Send } from 'lucide-react';
 import { generateSingleProductChannelUrl } from '../utils/whatsapp';
 
@@ -34,11 +35,16 @@ export const ProductCard = ({
   };
 
   return (
-    <div 
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      whileHover={{ y: -6 }}
       onClick={() => onQuickView(product)}
-      className="group bg-white rounded-3xl overflow-hidden border border-[#ebdcc7]/80 shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-col justify-between cursor-pointer relative"
+      className="group bg-white rounded-3xl overflow-hidden border border-[#ebdcc7]/80 shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between cursor-pointer relative"
     >
-      {/* Top Image Container (Zara / H&M High Fashion Aspect Ratio) */}
+      {/* Top Image Container */}
       <div className="relative aspect-[3/4] w-full overflow-hidden bg-stone-100">
         <img
           src={product.image}
@@ -48,21 +54,23 @@ export const ProductCard = ({
         />
 
         {/* Wishlist Floating Button */}
-        <button
+        <motion.button
+          whileHover={{ scale: 1.15 }}
+          whileTap={{ scale: 0.9 }}
           type="button"
           onClick={(e) => {
             e.stopPropagation();
             if (onToggleWishlist) onToggleWishlist(product.id);
           }}
-          className={`absolute top-3 right-3 w-9 h-9 rounded-full backdrop-blur-md flex items-center justify-center transition-all duration-300 z-20 shadow-md ${
+          className={`absolute top-3 right-3 w-9 h-9 rounded-full backdrop-blur-md flex items-center justify-center transition-colors z-20 shadow-md ${
             isWishlisted 
-              ? 'bg-rose-600 text-white scale-110' 
-              : 'bg-white/80 text-stone-700 hover:bg-white hover:text-rose-600'
+              ? 'bg-rose-600 text-white' 
+              : 'bg-white/85 text-stone-700 hover:bg-white hover:text-rose-600'
           }`}
           title={isWishlisted ? "Remove from Wishlist" : "Add to Wishlist"}
         >
           <Heart size={16} fill={isWishlisted ? "currentColor" : "none"} />
-        </button>
+        </motion.button>
 
         {/* Floating Badges */}
         <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
@@ -72,15 +80,15 @@ export const ProductCard = ({
             </span>
           )}
           {discountPercent > 0 && (
-            <span className="bg-emerald-700 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-md tracking-wider shadow-sm">
+            <span className="bg-emerald-700 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-md tracking-wider shadow-xs">
               {discountPercent}% OFF
             </span>
           )}
         </div>
 
-        {/* Special Offer Ribbon Strip */}
+        {/* Special Offer Ribbon Strip with Shimmer */}
         {product.offer && (
-          <div className="absolute bottom-0 inset-x-0 bg-gradient-to-r from-amber-700 via-brand-950 to-amber-800 text-gold-100 px-3 py-1 text-[11px] font-bold flex items-center justify-center gap-1.5 shadow-md z-10">
+          <div className="absolute bottom-0 inset-x-0 bg-gradient-to-r from-amber-700 via-amber-900 to-stone-900 text-gold-100 px-3 py-1 text-[11px] font-bold flex items-center justify-center gap-1.5 shadow-md z-10">
             <Sparkles size={12} className="text-gold-300 animate-pulse" />
             <span className="line-clamp-1">{product.offer}</span>
           </div>
@@ -100,7 +108,7 @@ export const ProductCard = ({
                   setSelectedSize(sz);
                   handleAdd(e, sz);
                 }}
-                className="w-7 h-7 rounded-lg bg-stone-100 hover:bg-brand-900 hover:text-gold-200 text-stone-800 text-xs font-bold transition-all shadow-xs flex items-center justify-center cursor-pointer"
+                className="w-7 h-7 rounded-lg bg-stone-100 hover:bg-stone-900 hover:text-white text-stone-800 text-xs font-bold transition-all shadow-xs flex items-center justify-center cursor-pointer"
               >
                 {sz}
               </button>
@@ -118,12 +126,12 @@ export const ProductCard = ({
         )}
       </div>
 
-      {/* Product Details (Zara Minimalist Fashion Layout) */}
+      {/* Product Details */}
       <div className="p-3 sm:p-4 md:p-5 flex-1 flex flex-col justify-between space-y-2.5">
         <div>
           {/* Category & Rating */}
           <div className="flex items-center justify-between text-xs text-stone-500 mb-1">
-            <span className="uppercase tracking-widest font-bold text-[9px] sm:text-[10px] text-gold-800 truncate max-w-[60%]">
+            <span className="uppercase tracking-widest font-bold text-[9px] sm:text-[10px] text-amber-800 truncate max-w-[60%]">
               {product.category}
             </span>
             <div className="flex items-center gap-1 text-amber-500 font-semibold text-[11px] sm:text-xs shrink-0">
@@ -134,7 +142,7 @@ export const ProductCard = ({
           </div>
 
           {/* Product Name */}
-          <h3 className="font-heading text-xs sm:text-sm md:text-base font-bold text-stone-900 line-clamp-1 group-hover:text-brand-900 transition-colors">
+          <h3 className="font-heading text-xs sm:text-sm md:text-base font-bold text-stone-900 line-clamp-1 group-hover:text-amber-900 transition-colors">
             {product.name}
           </h3>
 
@@ -145,7 +153,7 @@ export const ProductCard = ({
 
           {/* Price Strip */}
           <div className="flex items-baseline gap-1.5 sm:gap-2.5 mt-2 flex-wrap">
-            <span className="font-heading text-sm sm:text-base md:text-lg font-extrabold text-brand-950">
+            <span className="font-heading text-sm sm:text-base md:text-lg font-extrabold text-stone-900">
               ₹{product.price.toLocaleString('en-IN')}
             </span>
             {product.originalPrice && product.originalPrice > product.price && (
@@ -165,11 +173,12 @@ export const ProductCard = ({
         <div className="pt-2 border-t border-[#ebdcc7]/60 flex items-center gap-1.5 sm:gap-2">
           
           {/* Add to Cart Button */}
-          <button
+          <motion.button
+            whileTap={{ scale: 0.96 }}
             type="button"
             onClick={handleAdd}
             disabled={!product.inStock}
-            className={`flex-1 py-2 sm:py-2.5 px-2 sm:px-3 rounded-xl font-bold text-[11px] sm:text-xs transition-all flex items-center justify-center gap-1 sm:gap-1.5 shadow-sm active:scale-95 cursor-pointer min-w-0 ${
+            className={`flex-1 py-2 sm:py-2.5 px-2 sm:px-3 rounded-xl font-bold text-[11px] sm:text-xs transition-all flex items-center justify-center gap-1 sm:gap-1.5 shadow-xs cursor-pointer min-w-0 ${
               isAddedRecently
                 ? 'bg-emerald-700 text-white'
                 : 'royal-maroon-bg text-gold-100 hover:opacity-95'
@@ -186,13 +195,14 @@ export const ProductCard = ({
                 <span className="truncate">Add to Bag</span>
               </>
             )}
-          </button>
+          </motion.button>
 
           {/* Direct WhatsApp / Telegram Order Button */}
-          <button
+          <motion.button
+            whileTap={{ scale: 0.94 }}
             type="button"
             onClick={handleDirectChannelOrder}
-            className={`p-2 sm:p-2.5 rounded-xl text-white font-bold text-xs shadow-sm flex items-center justify-center transition-all cursor-pointer active:scale-95 shrink-0 ${
+            className={`p-2 sm:p-2.5 rounded-xl text-white font-bold text-xs shadow-xs flex items-center justify-center transition-all cursor-pointer shrink-0 ${
               isTelegram 
                 ? 'bg-sky-500 hover:bg-sky-600 shadow-sky-200' 
                 : 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-200'
@@ -200,12 +210,12 @@ export const ProductCard = ({
             title={`Instant 1-Click Order on ${channelLabel}`}
           >
             {isTelegram ? <Send size={14} /> : <MessageCircle size={15} />}
-          </button>
+          </motion.button>
 
         </div>
 
       </div>
 
-    </div>
+    </motion.div>
   );
 };

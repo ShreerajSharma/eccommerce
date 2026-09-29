@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { Star, CheckCircle, Quote, Sparkles } from 'lucide-react';
 
 export const CustomerReviews = ({ reviews = [] }) => {
@@ -9,8 +10,14 @@ export const CustomerReviews = ({ reviews = [] }) => {
       <div className="container mx-auto px-4 space-y-10">
         
         {/* Title */}
-        <div className="text-center space-y-2 max-w-xl mx-auto">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gold-400/20 text-gold-900 text-xs font-bold uppercase tracking-wider">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center space-y-2 max-w-xl mx-auto"
+        >
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-bold uppercase tracking-wider">
             <Sparkles size={13} className="text-amber-700" />
             <span>Over 10,000+ Happy Patrons Across India</span>
           </div>
@@ -20,16 +27,21 @@ export const CustomerReviews = ({ reviews = [] }) => {
           <p className="text-xs text-stone-500 font-light">
             Real experiences from boutique buyers who cherish handcrafted excellence and fine fabrics.
           </p>
-        </div>
+        </motion.div>
 
-        {/* 3 Review Cards */}
+        {/* Review Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {reviews.map((rev) => (
-            <div
+          {reviews.map((rev, idx) => (
+            <motion.div
               key={rev.id}
-              className="bg-[#fdfcf9] p-6 rounded-3xl border border-[#ebdcc7] shadow-sm hover:shadow-md transition-all space-y-4 flex flex-col justify-between relative"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: idx * 0.15 }}
+              whileHover={{ y: -6 }}
+              className="bg-[#fdfcf9] p-6 rounded-3xl border border-[#ebdcc7] shadow-xs hover:shadow-xl transition-all space-y-4 flex flex-col justify-between relative"
             >
-              <Quote className="absolute top-4 right-4 text-gold-300/40" size={40} />
+              <Quote className="absolute top-4 right-4 text-amber-300/30" size={40} />
 
               <div className="space-y-3">
                 {/* 5 Stars */}
@@ -44,7 +56,7 @@ export const CustomerReviews = ({ reviews = [] }) => {
                 </p>
 
                 {rev.productName && (
-                  <p className="text-[11px] text-gold-800 font-semibold">
+                  <p className="text-[11px] text-amber-900 font-semibold">
                     Purchased: <strong>{rev.productName}</strong>
                   </p>
                 )}
@@ -66,7 +78,7 @@ export const CustomerReviews = ({ reviews = [] }) => {
                   Verified Buyer
                 </span>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
 

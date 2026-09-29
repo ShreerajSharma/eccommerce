@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { 
   X, 
   Trash2, 
@@ -117,11 +118,17 @@ export const CartDrawer = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden bg-stone-950/70 backdrop-blur-sm animate-fade-in">
+    <div className="fixed inset-0 z-50 overflow-hidden bg-stone-950/70 backdrop-blur-sm">
       <div className="absolute inset-0" onClick={onClose}></div>
 
       <div className="fixed inset-y-0 right-0 max-w-full flex pl-0 sm:pl-10">
-        <div className="w-full sm:w-screen max-w-md bg-[#fdfcf9] shadow-2xl border-l border-gold-400 flex flex-col justify-between overflow-hidden">
+        <motion.div 
+          initial={{ x: '100%' }}
+          animate={{ x: 0 }}
+          exit={{ x: '100%' }}
+          transition={{ type: 'spring', damping: 25, stiffness: 220 }}
+          className="w-full sm:w-screen max-w-md bg-[#fdfcf9] shadow-2xl border-l border-gold-400 flex flex-col justify-between overflow-hidden"
+        >
           
           {/* 1. DRAWER HEADER */}
           <div className="p-4 sm:p-5 royal-maroon-bg text-gold-100 flex items-center justify-between border-b border-gold-500/40">
@@ -418,7 +425,7 @@ export const CartDrawer = ({
             </div>
           )}
 
-        </div>
+        </motion.div>
       </div>
     </div>
   );
