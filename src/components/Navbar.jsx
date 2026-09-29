@@ -137,11 +137,11 @@ export const Navbar = ({
 
             {/* Boutique Brand Logo */}
             <a href="#" className="flex items-center gap-2 sm:gap-2.5 min-w-0 overflow-hidden group">
-              <div className="w-8 h-8 sm:w-11 sm:h-11 rounded-full overflow-hidden flex items-center justify-center shadow-md border-2 border-amber-400 shrink-0 bg-[#0a1b24] group-hover:scale-105 transition-transform">
+              <div className="w-9 h-9 sm:w-12 sm:h-12 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform drop-shadow-sm">
                 <img 
                   src="/logo.png" 
                   alt={settings.storeName || "RADHIKA KURTI COLLECTION"} 
-                  className="w-full h-full object-cover" 
+                  className="w-full h-full object-contain" 
                 />
               </div>
               <div className="flex flex-col min-w-0">
