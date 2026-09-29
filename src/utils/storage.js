@@ -2,14 +2,14 @@ import { INITIAL_PRODUCTS, DEFAULT_CATEGORIES } from '../data/initialProducts';
 import { INITIAL_SETTINGS } from '../data/initialSettings';
 import { INITIAL_COUPONS, INITIAL_REVIEWS } from '../data/initialCoupons';
 
-const PRODUCTS_KEY = 'aura_kurti_products_v2';
-const CATEGORIES_KEY = 'aura_kurti_categories_v2';
-const SETTINGS_KEY = 'aura_kurti_settings_v2';
-const ORDERS_KEY = 'aura_kurti_orders_v2';
-const ADMIN_AUTH_KEY = 'aura_kurti_admin_auth_v2';
-const COUPONS_KEY = 'aura_kurti_coupons_v2';
-const REVIEWS_KEY = 'aura_kurti_reviews_v2';
-const WISHLIST_KEY = 'aura_kurti_wishlist_v2';
+const PRODUCTS_KEY = 'aura_kurti_products_v3';
+const CATEGORIES_KEY = 'aura_kurti_categories_v3';
+const SETTINGS_KEY = 'aura_kurti_settings_v3';
+const ORDERS_KEY = 'aura_kurti_orders_v3';
+const ADMIN_AUTH_KEY = 'aura_kurti_admin_auth_v3';
+const COUPONS_KEY = 'aura_kurti_coupons_v3';
+const REVIEWS_KEY = 'aura_kurti_reviews_v3';
+const WISHLIST_KEY = 'aura_kurti_wishlist_v3';
 
 export const getStoredCategories = () => {
   try {
