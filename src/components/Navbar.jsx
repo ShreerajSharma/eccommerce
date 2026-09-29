@@ -92,33 +92,37 @@ export const Navbar = ({
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#ebdcc7]/80 transition-all duration-300">
       
       {/* Top Announcement Bar (Light Luxury Champagne Gold & Warm Amber) */}
-      <div className="bg-gradient-to-r from-[#faede0] via-[#f7e6d2] to-[#faede0] text-amber-950 py-1.5 px-4 text-xs md:text-sm font-medium tracking-wider flex items-center justify-between border-b border-[#e5d0b8] shadow-xs">
-        <div className="container mx-auto flex items-center justify-between">
-          <div className="hidden sm:flex items-center gap-2 text-amber-900 font-semibold">
+      <div className="bg-gradient-to-r from-[#faede0] via-[#f7e6d2] to-[#faede0] text-amber-950 py-1.5 px-3 sm:px-4 text-xs font-medium tracking-wider border-b border-[#e5d0b8] shadow-xs">
+        <div className="container mx-auto flex items-center justify-between gap-2">
+          
+          {/* Support Info */}
+          <div className="hidden sm:flex items-center gap-2 text-amber-900 font-semibold shrink-0">
             {settings.orderChannel === 'telegram' ? (
               <>
                 <Send size={13} className="text-sky-600" />
-                <span>Telegram Support: <strong className="text-stone-900">@{cleanTelegramHandle(settings.telegramUsername)}</strong></span>
+                <span className="text-[11px] sm:text-xs">Telegram: <strong className="text-stone-900">@{cleanTelegramHandle(settings.telegramUsername)}</strong></span>
               </>
             ) : (
               <>
                 <Phone size={13} className="text-amber-700" />
-                <span>WhatsApp Support: <strong className="text-stone-900">{settings.whatsappNumber}</strong></span>
+                <span className="text-[11px] sm:text-xs">WhatsApp: <strong className="text-stone-900">{settings.whatsappNumber}</strong></span>
               </>
             )}
           </div>
 
-          <div className="flex-1 text-center font-bold tracking-wide flex items-center justify-center gap-2 text-amber-950">
-            <Sparkles size={14} className="text-amber-700 animate-pulse hidden xs:inline" />
-            <span>{settings.announcementText || "✨ Festive Mega Sale: Up to 50% OFF | Free Shipping Across India ✨"}</span>
-            <Sparkles size={14} className="text-amber-700 animate-pulse hidden xs:inline" />
+          {/* Announcement Marquee / Center Text */}
+          <div className="flex-1 text-center font-bold tracking-wide flex items-center justify-center gap-1.5 text-amber-950 min-w-0">
+            <Sparkles size={12} className="text-amber-700 shrink-0 animate-pulse hidden xs:inline" />
+            <span className="truncate text-[11px] sm:text-xs">{settings.announcementText || "✨ Festive Mega Sale: Up to 50% OFF | Free Shipping Across India ✨"}</span>
+            <Sparkles size={12} className="text-amber-700 shrink-0 animate-pulse hidden xs:inline" />
           </div>
 
-          <div className="hidden sm:flex items-center gap-3">
+          {/* Admin Indicator / Quick Link */}
+          <div className="hidden sm:flex items-center gap-2 shrink-0">
             {isAdminLoggedIn ? (
               <div className="flex items-center gap-2">
-                <span className="bg-emerald-100 text-emerald-800 border border-emerald-300 text-[11px] px-2.5 py-0.5 rounded-full flex items-center gap-1 font-bold">
-                  <CheckCircle2 size={11} /> Admin Active
+                <span className="bg-emerald-100 text-emerald-800 border border-emerald-300 text-[10px] px-2 py-0.5 rounded-full flex items-center gap-1 font-bold">
+                  <CheckCircle2 size={10} /> Admin Active
                 </span>
                 <button 
                   onClick={onOpenAdmin}
@@ -136,10 +140,10 @@ export const Navbar = ({
             ) : (
               <button 
                 onClick={onOpenAdmin} 
-                className="flex items-center gap-1.5 text-amber-900 hover:text-stone-950 transition-colors text-xs font-bold cursor-pointer px-2.5 py-0.5 rounded-lg hover:bg-amber-100/60"
+                className="flex items-center gap-1 text-amber-900 hover:text-stone-950 transition-colors text-xs font-bold cursor-pointer px-2 py-0.5 rounded-lg hover:bg-amber-100/60"
                 title="Admin Portal Login"
               >
-                <Lock size={12} />
+                <Lock size={11} />
                 <span>Admin Login</span>
               </button>
             )}
@@ -407,9 +411,39 @@ export const Navbar = ({
       {/* Mobile Drawer Menu */}
       {isMobileMenuOpen && (
         <div className="md:hidden bg-[#fdfcf9] border-t border-[#ebdcc7] shadow-xl p-4 space-y-4 animate-fadeIn">
+          {/* Quick Support Link on Mobile Drawer */}
+          <div className="flex items-center gap-2 pb-3 border-b border-stone-200">
+            <a
+              href={getDirectChannelLink(settings, "Hello! I would like to inquire about your Kurtis collection")}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`flex-1 py-2.5 px-3.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-sm ${
+                settings.orderChannel === 'telegram'
+                  ? 'bg-sky-500 text-white hover:bg-sky-600'
+                  : 'bg-emerald-600 text-white hover:bg-emerald-700'
+              }`}
+            >
+              {settings.orderChannel === 'telegram' ? <Send size={15} /> : <MessageCircle size={16} />}
+              <span>
+                Chat on {settings.orderChannel === 'telegram' ? 'Telegram' : 'WhatsApp'}
+              </span>
+            </a>
+
+            <button
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                onOpenAdmin();
+              }}
+              className="px-3.5 py-2.5 bg-stone-100 hover:bg-stone-200 text-stone-800 rounded-xl text-xs font-bold flex items-center gap-1.5 border border-stone-300"
+            >
+              <Lock size={14} />
+              <span>Admin</span>
+            </button>
+          </div>
+
           <div className="space-y-1">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-amber-900">Categories</p>
-            <div className="grid grid-cols-2 gap-1 pt-1">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-amber-900">Browse Categories</p>
+            <div className="grid grid-cols-2 gap-1.5 pt-1">
               {categoryNames.map((catName) => (
                 <button
                   key={catName}
@@ -418,8 +452,8 @@ export const Navbar = ({
                     setIsMobileMenuOpen(false);
                     if (onScrollToCatalog) onScrollToCatalog();
                   }}
-                  className={`text-left px-3 py-2 rounded-xl text-xs font-semibold ${
-                    selectedCategory === catName ? 'bg-amber-100 text-amber-950 font-bold' : 'text-stone-700 hover:bg-stone-100'
+                  className={`text-left px-3 py-2 rounded-xl text-xs font-semibold truncate transition-colors ${
+                    selectedCategory === catName ? 'bg-amber-100 text-amber-950 font-bold border border-amber-300' : 'text-stone-700 hover:bg-stone-100'
                   }`}
                 >
                   {catName}

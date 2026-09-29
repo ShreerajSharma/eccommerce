@@ -119,42 +119,42 @@ export const ProductCard = ({
       </div>
 
       {/* Product Details (Zara Minimalist Fashion Layout) */}
-      <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3">
+      <div className="p-3 sm:p-4 md:p-5 flex-1 flex flex-col justify-between space-y-2.5">
         <div>
           {/* Category & Rating */}
-          <div className="flex items-center justify-between text-xs text-stone-500 mb-1.5">
-            <span className="uppercase tracking-widest font-bold text-[10px] text-gold-800">
+          <div className="flex items-center justify-between text-xs text-stone-500 mb-1">
+            <span className="uppercase tracking-widest font-bold text-[9px] sm:text-[10px] text-gold-800 truncate max-w-[60%]">
               {product.category}
             </span>
-            <div className="flex items-center gap-1 text-amber-500 font-semibold text-xs">
-              <Star size={13} fill="currentColor" />
+            <div className="flex items-center gap-1 text-amber-500 font-semibold text-[11px] sm:text-xs shrink-0">
+              <Star size={12} fill="currentColor" />
               <span>{product.rating || 4.9}</span>
-              <span className="text-stone-400 text-[10px]">({product.reviewsCount || 38})</span>
+              <span className="text-stone-400 text-[9px] sm:text-[10px]">({product.reviewsCount || 38})</span>
             </div>
           </div>
 
           {/* Product Name */}
-          <h3 className="font-heading text-sm sm:text-base font-bold text-stone-900 line-clamp-1 group-hover:text-brand-900 transition-colors">
+          <h3 className="font-heading text-xs sm:text-sm md:text-base font-bold text-stone-900 line-clamp-1 group-hover:text-brand-900 transition-colors">
             {product.name}
           </h3>
 
           {/* Fabric & Color Subtitle */}
-          <p className="text-xs text-stone-500 line-clamp-1 mt-0.5">
+          <p className="text-[11px] sm:text-xs text-stone-500 line-clamp-1 mt-0.5">
             {product.fabric || "Pure Silk / Cotton"} {product.color ? `• ${product.color}` : ''}
           </p>
 
           {/* Price Strip */}
-          <div className="flex items-baseline gap-2.5 mt-2.5">
-            <span className="font-heading text-base sm:text-lg font-extrabold text-brand-950">
+          <div className="flex items-baseline gap-1.5 sm:gap-2.5 mt-2 flex-wrap">
+            <span className="font-heading text-sm sm:text-base md:text-lg font-extrabold text-brand-950">
               ₹{product.price.toLocaleString('en-IN')}
             </span>
             {product.originalPrice && product.originalPrice > product.price && (
-              <span className="text-xs sm:text-sm text-stone-400 line-through font-normal">
+              <span className="text-[11px] sm:text-xs text-stone-400 line-through font-normal">
                 ₹{product.originalPrice.toLocaleString('en-IN')}
               </span>
             )}
             {discountPercent > 0 && (
-              <span className="text-[11px] font-extrabold text-emerald-700">
+              <span className="text-[10px] sm:text-[11px] font-extrabold text-emerald-700">
                 Save ₹{(product.originalPrice - product.price).toLocaleString('en-IN')}
               </span>
             )}
@@ -162,14 +162,14 @@ export const ProductCard = ({
         </div>
 
         {/* Action Buttons */}
-        <div className="pt-2 border-t border-[#ebdcc7]/60 flex gap-2">
+        <div className="pt-2 border-t border-[#ebdcc7]/60 flex items-center gap-1.5 sm:gap-2">
           
           {/* Add to Cart Button */}
           <button
             type="button"
             onClick={handleAdd}
             disabled={!product.inStock}
-            className={`flex-1 py-2.5 px-3 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-sm active:scale-95 cursor-pointer ${
+            className={`flex-1 py-2 sm:py-2.5 px-2 sm:px-3 rounded-xl font-bold text-[11px] sm:text-xs transition-all flex items-center justify-center gap-1 sm:gap-1.5 shadow-sm active:scale-95 cursor-pointer min-w-0 ${
               isAddedRecently
                 ? 'bg-emerald-700 text-white'
                 : 'royal-maroon-bg text-gold-100 hover:opacity-95'
@@ -177,13 +177,13 @@ export const ProductCard = ({
           >
             {isAddedRecently ? (
               <>
-                <Check size={14} className="animate-bounce" />
-                <span>Added to Bag!</span>
+                <Check size={13} className="animate-bounce shrink-0" />
+                <span className="truncate">Added!</span>
               </>
             ) : (
               <>
-                <ShoppingBag size={14} />
-                <span>Add to Bag</span>
+                <ShoppingBag size={13} className="shrink-0" />
+                <span className="truncate">Add to Bag</span>
               </>
             )}
           </button>
@@ -192,14 +192,14 @@ export const ProductCard = ({
           <button
             type="button"
             onClick={handleDirectChannelOrder}
-            className={`p-2.5 rounded-xl text-white font-bold text-xs shadow-sm flex items-center justify-center transition-all cursor-pointer active:scale-95 ${
+            className={`p-2 sm:p-2.5 rounded-xl text-white font-bold text-xs shadow-sm flex items-center justify-center transition-all cursor-pointer active:scale-95 shrink-0 ${
               isTelegram 
                 ? 'bg-sky-500 hover:bg-sky-600 shadow-sky-200' 
                 : 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-200'
             }`}
             title={`Instant 1-Click Order on ${channelLabel}`}
           >
-            {isTelegram ? <Send size={15} /> : <MessageCircle size={16} />}
+            {isTelegram ? <Send size={14} /> : <MessageCircle size={15} />}
           </button>
 
         </div>

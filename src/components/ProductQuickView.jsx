@@ -62,25 +62,25 @@ export const ProductQuickView = ({ product, onClose, onAddToCart, settings = {} 
           <X size={20} />
         </button>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 max-h-[90vh] overflow-y-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 max-h-[92vh] overflow-y-auto">
           
           {/* Left Column: Image Gallery */}
-          <div className="p-4 sm:p-6 bg-[#faf5ed] flex flex-col justify-between">
+          <div className="p-3 sm:p-5 md:p-6 bg-[#faf5ed] flex flex-col justify-between">
             {/* Main Active Image */}
-            <div className="relative aspect-[3/4] w-full rounded-2xl overflow-hidden border border-gold-300/50 shadow-md">
+            <div className="relative aspect-[3/4] max-h-72 sm:max-h-96 md:max-h-none w-full rounded-2xl overflow-hidden border border-gold-300/50 shadow-md mx-auto">
               <img
                 src={selectedImage || product.image}
                 alt={product.name}
                 className="w-full h-full object-cover object-top"
               />
               {product.badge && (
-                <span className="absolute top-3 left-3 royal-maroon-bg text-gold-100 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider border border-gold-400/40">
+                <span className="absolute top-2.5 left-2.5 royal-maroon-bg text-gold-100 text-[10px] sm:text-xs font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider border border-gold-400/40">
                   {product.badge}
                 </span>
               )}
               {product.offer && (
-                <div className="absolute bottom-0 inset-x-0 bg-gradient-to-r from-amber-600 via-brand-900 to-amber-700 text-gold-100 px-3 py-1.5 text-xs font-bold flex items-center justify-center gap-1.5 shadow-md">
-                  <Sparkles size={14} className="text-gold-300 animate-spin" style={{ animationDuration: '4s' }} />
+                <div className="absolute bottom-0 inset-x-0 bg-gradient-to-r from-amber-600 via-brand-900 to-amber-700 text-gold-100 px-2.5 py-1 text-[11px] sm:text-xs font-bold flex items-center justify-center gap-1.5 shadow-md">
+                  <Sparkles size={13} className="text-gold-300 animate-spin" style={{ animationDuration: '4s' }} />
                   <span>{product.offer}</span>
                 </div>
               )}
@@ -88,13 +88,13 @@ export const ProductQuickView = ({ product, onClose, onAddToCart, settings = {} 
 
             {/* Thumbnails */}
             {images.length > 1 && (
-              <div className="flex items-center gap-2 mt-3 overflow-x-auto">
+              <div className="flex items-center gap-2 mt-2.5 overflow-x-auto pb-1">
                 {images.map((img, idx) => (
                   <button
                     key={idx}
                     onClick={() => setSelectedImage(img)}
-                    className={`w-16 h-20 rounded-lg overflow-hidden border-2 transition-all ${
-                      selectedImage === img ? 'border-brand-900 scale-105' : 'border-transparent opacity-70'
+                    className={`w-12 sm:w-16 h-16 sm:h-20 rounded-lg overflow-hidden border-2 transition-all shrink-0 ${
+                      selectedImage === img ? 'border-brand-900 scale-105 shadow-sm' : 'border-transparent opacity-70'
                     }`}
                   >
                     <img src={img} alt="" className="w-full h-full object-cover object-top" />
@@ -105,14 +105,14 @@ export const ProductQuickView = ({ product, onClose, onAddToCart, settings = {} 
           </div>
 
           {/* Right Column: Product Info & Actions */}
-          <div className="p-5 sm:p-8 flex flex-col justify-between space-y-5">
+          <div className="p-4 sm:p-6 md:p-8 flex flex-col justify-between space-y-4 sm:space-y-5">
             <div>
               {/* Category & Rating */}
               <div className="flex items-center justify-between">
-                <span className="text-xs uppercase font-bold tracking-widest text-gold-700 bg-gold-100/80 px-2.5 py-1 rounded-full">
+                <span className="text-[10px] sm:text-xs uppercase font-bold tracking-widest text-gold-700 bg-gold-100/80 px-2.5 py-1 rounded-full">
                   {product.category}
                 </span>
-                <div className="flex items-center gap-1.5 text-amber-500 font-bold text-sm">
+                <div className="flex items-center gap-1 text-amber-500 font-bold text-xs sm:text-sm">
                   <Star size={16} fill="currentColor" />
                   <span>{product.rating || 4.8}</span>
                   <span className="text-stone-400 font-normal text-xs">({product.reviewsCount || 45} Verified Ratings)</span>

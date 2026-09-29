@@ -316,59 +316,65 @@ For any exchange / support, contact WhatsApp: ${invoiceData.companyPhone}`;
           </div>
 
           {/* Action Buttons */}
-          <div className="flex items-center gap-2 flex-wrap w-full md:w-auto justify-end">
+          <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2 w-full md:w-auto justify-end">
             {/* Toggle Edit Mode */}
             <button
               onClick={() => setIsEditing(!isEditing)}
-              className={`px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shadow-sm ${
+              className={`px-3 py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-sm ${
                 isEditing 
                   ? 'bg-amber-400 text-stone-950 hover:bg-amber-300' 
                   : 'bg-white/15 text-white hover:bg-white/25 border border-white/20'
               }`}
             >
-              {isEditing ? <Save size={15} /> : <Edit3 size={15} />}
-              <span>{isEditing ? 'Done Editing' : 'Edit Bill Details'}</span>
+              {isEditing ? <Save size={14} /> : <Edit3 size={14} />}
+              <span className="truncate">{isEditing ? 'Done' : 'Edit Bill'}</span>
             </button>
 
             {/* Download as Image PNG */}
             <button
               onClick={handleDownloadImage}
               disabled={isGeneratingImage}
-              className="px-3.5 py-2 bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white font-bold text-xs rounded-xl shadow-md flex items-center gap-1.5 transition-all active:scale-95 disabled:opacity-50"
+              className="px-3 py-2 bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white font-bold text-xs rounded-xl shadow-md flex items-center justify-center gap-1.5 transition-all active:scale-95 disabled:opacity-50"
               title="Download Bill as Image / Photo (PNG)"
             >
-              <Download size={15} />
-              <span>{isGeneratingImage ? 'Generating...' : 'Download Image'}</span>
+              <Download size={14} />
+              <span className="truncate">{isGeneratingImage ? 'Saving...' : 'PNG Image'}</span>
             </button>
 
             {/* Print / Save as PDF */}
             <button
               onClick={handlePrint}
-              className="px-4 py-2 bg-gradient-to-r from-gold-400 via-gold-500 to-gold-600 text-brand-950 font-bold text-xs rounded-xl shadow-md hover:shadow-gold-500/30 hover:scale-105 active:scale-95 transition-all flex items-center gap-1.5"
+              className="px-3 py-2 bg-gradient-to-r from-gold-400 via-gold-500 to-gold-600 text-brand-950 font-bold text-xs rounded-xl shadow-md hover:shadow-gold-500/30 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-1.5"
               title="Print or Save as Official PDF (A4)"
             >
-              <Printer size={15} />
-              <span>Print / Save PDF</span>
+              <Printer size={14} />
+              <span className="truncate">Print / PDF</span>
             </button>
 
             {/* Send WhatsApp Invoice */}
             <button
               onClick={handleSendWhatsAppInvoice}
-              className="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center gap-1.5 transition-all"
+              className="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center justify-center gap-1.5 transition-all"
               title="Send bill summary directly to customer on WhatsApp"
             >
-              <MessageCircle size={15} />
-              <span>WhatsApp Bill</span>
+              <MessageCircle size={14} />
+              <span className="truncate">WhatsApp</span>
             </button>
 
             {/* Close Button */}
             <button
               onClick={onClose}
-              className="p-2 rounded-full text-gold-200 hover:text-white hover:bg-white/10"
+              className="col-span-2 sm:col-span-1 p-2 rounded-xl text-gold-200 hover:text-white hover:bg-white/10 flex items-center justify-center border border-white/10 sm:border-0"
             >
-              <X size={20} />
+              <X size={18} />
+              <span className="sm:hidden text-xs font-bold ml-1">Close Bill</span>
             </button>
           </div>
+        </div>
+
+        {/* Mobile Swipe Notice */}
+        <div className="no-print md:hidden bg-amber-100/90 text-amber-950 text-[11px] font-bold px-3 py-1.5 text-center border-b border-amber-300 flex items-center justify-center gap-1.5">
+          <span>👉 Swipe horizontally on the bill to view full tax table & official rubber stamp</span>
         </div>
 
         {/* ORDER SELECTOR STRIP (Hidden when Printing) */}
