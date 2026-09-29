@@ -150,6 +150,72 @@ export const AdminPage = ({
 
   // Store Settings State
   const [storeSettings, setStoreSettings] = useState({ ...settings });
+  const [importJsonInput, setImportJsonInput] = useState('');
+  const [importStatusMsg, setImportStatusMsg] = useState('');
+
+  // 1-Click Sync / Export Full Store State
+  const handleExportFullStoreJSON = () => {
+    const fullData = {
+      settings: storeSettings,
+      products,
+      categories,
+      coupons,
+      reviews
+    };
+    const jsonStr = JSON.stringify(fullData, null, 2);
+    try {
+      navigator.clipboard.writeText(jsonStr);
+    } catch (e) {
+      console.error(e);
+    }
+
+    try {
+      const blob = new Blob([jsonStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `aura_store_data_${Date.now()}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      console.error(e);
+    }
+
+    setImportStatusMsg('✅ Full store data copied to clipboard & downloaded as JSON!');
+    setTimeout(() => setImportStatusMsg(''), 5000);
+  };
+
+  // 1-Click Import / Restore Full Store State
+  const handleImportFullStoreJSON = () => {
+    try {
+      if (!importJsonInput.trim()) return;
+      const parsed = JSON.parse(importJsonInput.trim());
+      if (parsed.settings) {
+        setStoreSettings(parsed.settings);
+        onSaveSettings(parsed.settings);
+      }
+      if (Array.isArray(parsed.products)) {
+        onSaveProducts(parsed.products);
+      }
+      if (Array.isArray(parsed.categories)) {
+        onSaveCategories(parsed.categories);
+      }
+      if (Array.isArray(parsed.coupons)) {
+        onSaveCoupons(parsed.coupons);
+      }
+      if (Array.isArray(parsed.reviews)) {
+        onSaveReviews(parsed.reviews);
+      }
+      setImportStatusMsg('🎉 All settings, products, and categories successfully imported and applied!');
+      setImportJsonInput('');
+      setTimeout(() => setImportStatusMsg(''), 5000);
+    } catch (e) {
+      setImportStatusMsg('❌ Invalid JSON format! Please check and try again.');
+      setTimeout(() => setImportStatusMsg(''), 4000);
+    }
+  };
 
   // Handle Admin Login Form
   const handleLogin = (e) => {
@@ -1903,6 +1969,71 @@ export const AdminPage = ({
                 </button>
               </div>
             </form>
+
+            {/* 1-CLICK LIVE SYNC & DATA BACKUP / RESTORE */}
+            <div className="p-6 bg-gradient-to-br from-amber-50 via-white to-gold-50/70 border border-amber-300 rounded-3xl space-y-4 shadow-sm">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-9 h-9 rounded-xl bg-amber-700 text-white flex items-center justify-center shadow-xs">
+                    <Download size={18} />
+                  </div>
+                  <div>
+                    <h3 className="font-heading text-sm font-bold text-stone-900">
+                      Sync & Transfer Store Data (Localhost ↔ Live Vercel)
+                    </h3>
+                    <p className="text-[11px] text-stone-500">
+                      Export all products, categories, settings & coupons into a JSON backup, or import to update live instant.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {importStatusMsg && (
+                <div className="p-3 bg-emerald-50 border border-emerald-300 rounded-xl text-emerald-900 text-xs font-bold flex items-center gap-2">
+                  <span>{importStatusMsg}</span>
+                </div>
+              )}
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                {/* 1. Export JSON */}
+                <div className="p-4 bg-white rounded-2xl border border-stone-200 space-y-2">
+                  <span className="text-xs font-bold text-stone-900 block">Step 1: Export Current Store State</span>
+                  <p className="text-[11px] text-stone-500">
+                    Download backup or copy full JSON with all your custom changes.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={handleExportFullStoreJSON}
+                    className="w-full py-2.5 bg-stone-900 hover:bg-stone-800 text-white font-bold text-xs rounded-xl shadow-xs flex items-center justify-center gap-2 cursor-pointer active:scale-95"
+                  >
+                    <Download size={14} />
+                    <span>Copy JSON & Download Backup</span>
+                  </button>
+                </div>
+
+                {/* 2. Import JSON */}
+                <div className="p-4 bg-white rounded-2xl border border-stone-200 space-y-2">
+                  <span className="text-xs font-bold text-stone-900 block">Step 2: Import & Apply JSON</span>
+                  <input
+                    type="text"
+                    placeholder="Paste exported JSON here..."
+                    value={importJsonInput}
+                    onChange={(e) => setImportJsonInput(e.target.value)}
+                    className="w-full px-3 py-2 bg-stone-50 border border-stone-300 rounded-lg text-xs"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleImportFullStoreJSON}
+                    disabled={!importJsonInput.trim()}
+                    className="w-full py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs rounded-xl shadow-xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
+                  >
+                    <Check size={14} />
+                    <span>Import & Apply to Store</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
           </div>
         )}
 
