@@ -46,12 +46,31 @@ import {
   TrendingDown,
   ShoppingBasket,
   Send,
-  MessageCircle
+  MessageCircle,
+  Database,
+  Cloud,
+  CheckCircle,
+  Copy
 } from 'lucide-react';
 import { SIZES, INITIAL_PRODUCTS, DEFAULT_CATEGORIES } from '../../data/initialProducts';
 import { INITIAL_COUPONS, INITIAL_REVIEWS } from '../../data/initialCoupons';
 import { OfficialInvoiceModal } from './OfficialInvoiceModal';
 import { normalizeImageUrl, isGoogleDriveUrl } from '../../utils/imageUrl';
+import { 
+  getSupabaseConfig, 
+  saveSupabaseConfig, 
+  isSupabaseConfigured, 
+  testSupabaseConnection 
+} from '../../utils/supabaseClient';
+import { 
+  pushAllDataToSupabase, 
+  SUPABASE_SQL_SCHEMA,
+  fetchCloudProducts,
+  fetchCloudCategories,
+  fetchCloudSettings,
+  fetchCloudCoupons,
+  fetchCloudReviews
+} from '../../utils/cloudSync';
 
 export const AdminPage = ({ 
   products = [], 
@@ -153,6 +172,69 @@ export const AdminPage = ({
   const [storeSettings, setStoreSettings] = useState({ ...settings });
   const [importJsonInput, setImportJsonInput] = useState('');
   const [importStatusMsg, setImportStatusMsg] = useState('');
+
+  // Cloud Database (Supabase) State
+  const [supabaseConfig, setSupabaseConfig] = useState(getSupabaseConfig);
+  const [supabaseStatus, setSupabaseStatus] = useState(null);
+  const [isTestingSupabase, setIsTestingSupabase] = useState(false);
+  const [isPushingCloud, setIsPushingCloud] = useState(false);
+  const [isPullingCloud, setIsPullingCloud] = useState(false);
+  const [showSqlModal, setShowSqlModal] = useState(false);
+  const [copiedSql, setCopiedSql] = useState(false);
+
+  const handleSaveAndTestSupabase = async (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    setIsTestingSupabase(true);
+    setSupabaseStatus(null);
+    saveSupabaseConfig(supabaseConfig.url, supabaseConfig.anonKey);
+    const result = await testSupabaseConnection();
+    setSupabaseStatus(result);
+    setIsTestingSupabase(false);
+  };
+
+  const handlePushAllToCloud = async () => {
+    setIsPushingCloud(true);
+    setSupabaseStatus(null);
+    const result = await pushAllDataToSupabase();
+    setSupabaseStatus(result);
+    setIsPushingCloud(false);
+  };
+
+  const handlePullFromCloud = async () => {
+    setIsPullingCloud(true);
+    setSupabaseStatus(null);
+    try {
+      const [cloudProds, cloudCats, cloudSets, cloudCpns, cloudRevs] = await Promise.all([
+        fetchCloudProducts(),
+        fetchCloudCategories(),
+        fetchCloudSettings(),
+        fetchCloudCoupons(),
+        fetchCloudReviews()
+      ]);
+      if (cloudProds && cloudProds.length > 0) onSaveProducts(cloudProds);
+      if (cloudCats && cloudCats.length > 0) onSaveCategories(cloudCats);
+      if (cloudSets && Object.keys(cloudSets).length > 0) {
+        setStoreSettings(cloudSets);
+        onSaveSettings(cloudSets);
+      }
+      if (cloudCpns && cloudCpns.length > 0) onSaveCoupons(cloudCpns);
+      if (cloudRevs && cloudRevs.length > 0) onSaveReviews(cloudRevs);
+      setSupabaseStatus({ success: true, message: '🎉 Latest live store data pulled from Supabase!' });
+    } catch (e) {
+      setSupabaseStatus({ success: false, message: 'Failed to pull data from cloud: ' + e.message });
+    }
+    setIsPullingCloud(false);
+  };
+
+  const handleCopySql = () => {
+    try {
+      navigator.clipboard.writeText(SUPABASE_SQL_SCHEMA);
+      setCopiedSql(true);
+      setTimeout(() => setCopiedSql(false), 3000);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   // 1-Click Sync / Export Full Store State
   const handleExportFullStoreJSON = () => {
@@ -1971,6 +2053,127 @@ export const AdminPage = ({
               </div>
             </form>
 
+            {/* ☁️ SUPABASE CLOUD DATABASE REAL-TIME SYNC */}
+            <div className="p-6 bg-gradient-to-br from-stone-900 via-stone-950 to-stone-900 text-white rounded-3xl border border-gold-500/40 space-y-5 shadow-xl">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-stone-800">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 text-white flex items-center justify-center shadow-lg">
+                    <Database size={20} />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-heading text-sm sm:text-base font-bold text-gold-200">
+                        Supabase Cloud Database
+                      </h3>
+                      {isSupabaseConfigured() ? (
+                        <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                          Configured & Active
+                        </span>
+                      ) : (
+                        <span className="bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                          Not Connected
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-[11px] text-stone-400">
+                      Sync products, categories, coupons & orders live across all devices, mobile phones & Vercel.
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setShowSqlModal(true)}
+                  className="px-3.5 py-2 bg-stone-800 hover:bg-stone-700 text-gold-300 text-xs font-bold rounded-xl border border-stone-700 flex items-center gap-1.5 cursor-pointer self-start sm:self-auto transition-all"
+                >
+                  <Copy size={13} />
+                  <span>Get SQL Table Setup</span>
+                </button>
+              </div>
+
+              {/* Status Message */}
+              {supabaseStatus && (
+                <div className={`p-3.5 rounded-2xl text-xs font-bold flex items-center gap-2 border ${
+                  supabaseStatus.success
+                    ? 'bg-emerald-950/80 border-emerald-600/50 text-emerald-200'
+                    : 'bg-rose-950/80 border-rose-600/50 text-rose-200'
+                }`}>
+                  <span>{supabaseStatus.success ? '✅' : '⚠️'}</span>
+                  <span>{supabaseStatus.message}</span>
+                </div>
+              )}
+
+              {/* Form for Project URL & Anon Key */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-stone-300 mb-1">
+                    Supabase Project URL
+                  </label>
+                  <input
+                    type="url"
+                    placeholder="https://xyzabcdefg.supabase.co"
+                    value={supabaseConfig.url}
+                    onChange={(e) => setSupabaseConfig({ ...supabaseConfig, url: e.target.value })}
+                    className="w-full px-3.5 py-2 bg-stone-800/90 border border-stone-700 text-white rounded-xl text-xs font-mono focus:outline-none focus:border-gold-400"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-stone-300 mb-1">
+                    Supabase Anon / Public API Key
+                  </label>
+                  <input
+                    type="password"
+                    placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                    value={supabaseConfig.anonKey}
+                    onChange={(e) => setSupabaseConfig({ ...supabaseConfig, anonKey: e.target.value })}
+                    className="w-full px-3.5 py-2 bg-stone-800/90 border border-stone-700 text-white rounded-xl text-xs font-mono focus:outline-none focus:border-gold-400"
+                  />
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-wrap items-center gap-2.5 pt-1">
+                <button
+                  type="button"
+                  onClick={handleSaveAndTestSupabase}
+                  disabled={isTestingSupabase || !supabaseConfig.url || !supabaseConfig.anonKey}
+                  className="px-4 py-2.5 bg-emerald-700 hover:bg-emerald-600 disabled:opacity-50 text-white font-bold text-xs rounded-xl shadow-md flex items-center gap-1.5 cursor-pointer transition-all"
+                >
+                  <CheckCircle size={14} />
+                  <span>{isTestingSupabase ? 'Testing Connection...' : 'Save & Test Cloud DB'}</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handlePushAllToCloud}
+                  disabled={isPushingCloud || !isSupabaseConfigured()}
+                  className="px-4 py-2.5 bg-gradient-to-r from-[#700b1d] to-[#4a040e] hover:from-[#850e24] hover:to-[#540614] disabled:opacity-50 text-gold-200 border border-gold-400/40 font-bold text-xs rounded-xl shadow-md flex items-center gap-1.5 cursor-pointer transition-all"
+                >
+                  <Cloud size={14} />
+                  <span>{isPushingCloud ? 'Uploading Products...' : '⚡ Push All Store Data to Supabase'}</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handlePullFromCloud}
+                  disabled={isPullingCloud || !isSupabaseConfigured()}
+                  className="px-4 py-2.5 bg-stone-800 hover:bg-stone-700 disabled:opacity-50 text-stone-200 font-bold text-xs rounded-xl border border-stone-700 flex items-center gap-1.5 cursor-pointer transition-all"
+                >
+                  <RotateCcw size={13} className={isPullingCloud ? "animate-spin" : ""} />
+                  <span>{isPullingCloud ? 'Syncing...' : '🔄 Pull from Cloud'}</span>
+                </button>
+              </div>
+
+              <div className="text-[11px] text-stone-400 pt-1 flex items-center gap-1.5">
+                <span>💡</span>
+                <span>
+                  Tip: Jab aap yaha credentials save karte hain, to Admin me kiya gaya koi bhi change Supabase Cloud me save hota hai aur live website par sabhi customers ko dikhta hai!
+                </span>
+              </div>
+            </div>
+
             {/* 1-CLICK LIVE SYNC & DATA BACKUP / RESTORE */}
             <div className="p-6 bg-gradient-to-br from-amber-50 via-white to-gold-50/70 border border-amber-300 rounded-3xl space-y-4 shadow-sm">
               <div className="flex items-center justify-between">
@@ -2700,6 +2903,57 @@ export const AdminPage = ({
           settings={storeSettings}
           products={products}
         />
+      )}
+
+      {/* SQL SCHEMA MODAL FOR SUPABASE */}
+      {showSqlModal && (
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-stone-900 border border-gold-500/40 text-white rounded-3xl max-w-2xl w-full p-5 sm:p-6 space-y-4 max-h-[85vh] flex flex-col shadow-2xl animate-fadeIn">
+            <div className="flex items-center justify-between border-b border-stone-800 pb-3">
+              <div className="flex items-center gap-2">
+                <Database size={20} className="text-emerald-400" />
+                <h3 className="font-heading text-base font-bold text-gold-200">
+                  Supabase SQL Setup Script
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowSqlModal(false)}
+                className="p-1.5 rounded-full hover:bg-stone-800 text-stone-400 hover:text-white cursor-pointer"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <p className="text-xs text-stone-300">
+              1. Apne <a href="https://supabase.com/dashboard" target="_blank" rel="noopener noreferrer" className="text-gold-300 underline font-bold">Supabase Dashboard</a> me jaakar <strong>SQL Editor</strong> kholein.<br />
+              2. Ye script paste karein aur <strong>Run</strong> daba dein. Sabhi 6 tables (products, categories, settings, coupons, reviews, orders) auto-create ho jayenge.
+            </p>
+
+            <div className="flex-1 overflow-y-auto bg-stone-950 p-4 rounded-2xl border border-stone-800 font-mono text-[11px] text-emerald-300 select-all max-h-64">
+              <pre className="whitespace-pre-wrap">{SUPABASE_SQL_SCHEMA}</pre>
+            </div>
+
+            <div className="flex items-center justify-between pt-2">
+              <button
+                type="button"
+                onClick={handleCopySql}
+                className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl flex items-center gap-2 shadow-md cursor-pointer transition-all active:scale-95"
+              >
+                <Copy size={14} />
+                <span>{copiedSql ? '✓ Copied SQL to Clipboard!' : 'Copy SQL Script'}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setShowSqlModal(false)}
+                className="px-4 py-2 bg-stone-800 hover:bg-stone-700 text-stone-300 text-xs font-bold rounded-xl cursor-pointer"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
     </div>

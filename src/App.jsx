@@ -42,6 +42,21 @@ import {
   Send
 } from 'lucide-react';
 import { getDirectChannelLink } from './utils/whatsapp';
+import { 
+  fetchCloudProducts, 
+  syncCloudProducts, 
+  fetchCloudCategories, 
+  syncCloudCategories, 
+  fetchCloudSettings, 
+  syncCloudSettings, 
+  fetchCloudCoupons, 
+  syncCloudCoupons, 
+  fetchCloudReviews, 
+  syncCloudReviews, 
+  fetchCloudOrders,
+  recordCloudOrder
+} from './utils/cloudSync';
+import { isSupabaseConfigured } from './utils/supabaseClient';
 
 export function App() {
   // Persistent State
@@ -101,6 +116,33 @@ export function App() {
 
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  // Initial Cloud Data Fetching & Sync
+  useEffect(() => {
+    const loadCloudData = async () => {
+      if (isSupabaseConfigured()) {
+        try {
+          const [cloudProds, cloudCats, cloudSets, cloudCpns, cloudRevs, cloudOrds] = await Promise.all([
+            fetchCloudProducts(),
+            fetchCloudCategories(),
+            fetchCloudSettings(),
+            fetchCloudCoupons(),
+            fetchCloudReviews(),
+            fetchCloudOrders()
+          ]);
+          if (cloudProds && cloudProds.length > 0) setProducts(cloudProds);
+          if (cloudCats && cloudCats.length > 0) setCategories(cloudCats);
+          if (cloudSets && Object.keys(cloudSets).length > 0) setSettings(cloudSets);
+          if (cloudCpns && cloudCpns.length > 0) setCoupons(cloudCpns);
+          if (cloudRevs && cloudRevs.length > 0) setReviews(cloudRevs);
+          if (cloudOrds && cloudOrds.length > 0) setOrders(cloudOrds);
+        } catch (err) {
+          console.error("Cloud data fetch error:", err);
+        }
+      }
+    };
+    loadCloudData();
   }, []);
 
   // Save cart to local storage
@@ -177,30 +219,30 @@ export function App() {
     setCartItems([]);
   };
 
-  // Admin Handlers
+  // Admin Handlers (Saves both locally and to Supabase Cloud)
   const handleSaveProducts = (newProducts) => {
     setProducts(newProducts);
-    saveStoredProducts(newProducts);
+    syncCloudProducts(newProducts);
   };
 
   const handleSaveCategories = (newCategories) => {
     setCategories(newCategories);
-    saveStoredCategories(newCategories);
+    syncCloudCategories(newCategories);
   };
 
   const handleSaveCoupons = (newCoupons) => {
     setCoupons(newCoupons);
-    saveStoredCoupons(newCoupons);
+    syncCloudCoupons(newCoupons);
   };
 
   const handleSaveReviews = (newReviews) => {
     setReviews(newReviews);
-    saveStoredReviews(newReviews);
+    syncCloudReviews(newReviews);
   };
 
   const handleSaveSettings = (newSettings) => {
     setSettings(newSettings);
-    saveStoredSettings(newSettings);
+    syncCloudSettings(newSettings);
   };
 
   const handleAdminLoginSuccess = () => {
