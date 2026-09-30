@@ -2,6 +2,9 @@ import { createClient } from '@supabase/supabase-js';
 
 const SUPABASE_CONFIG_KEY = 'rkc_supabase_config';
 
+const DEFAULT_SUPABASE_URL = 'https://kzjfxhevbgthcwaceyml.supabase.co';
+const DEFAULT_SUPABASE_ANON_KEY = 'sb_publishable_pyP-vHhudmH1SvCS26ggBQ_qjDCyIJp';
+
 /**
  * Gets Supabase URL and Anon Key from environment variables or stored settings
  */
@@ -25,7 +28,7 @@ export const getSupabaseConfig = () => {
     console.error("Failed to read Supabase config from storage", e);
   }
 
-  return { url: '', anonKey: '', source: 'none' };
+  return { url: DEFAULT_SUPABASE_URL, anonKey: DEFAULT_SUPABASE_ANON_KEY, source: 'default' };
 };
 
 /**
